@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\pgAdmin 4\v4\runtime\psql.exe" --set=sslmode=require -f create.sql -h host -p 5432 -U username postgres

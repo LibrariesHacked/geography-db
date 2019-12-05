@@ -1,2 +1,3 @@
-# geography-db
-A database to hold common UK geography
+# Geography database
+
+A database to hold common UK geography.

@@ -1,0 +1,17 @@
+-- create the database
+\i 'database/db_geography.sql';
+
+-- switch to using the database
+\c geography;
+
+-- setup any extensions
+\i 'database/db_extensions.sql';
+
+-- set client encoding
+set client_encoding = 'UTF8';
+
+-- create tables
+\i 'tables/tbl_postcode_lookups.sql';
+
+-- load in data
+\i 'load.sql';
