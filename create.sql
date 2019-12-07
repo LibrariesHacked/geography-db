@@ -15,3 +15,9 @@ set client_encoding = 'UTF8';
 
 -- load in data
 \i 'load.sql';
+
+-- create views
+\i 'views/vw_postcodes.sql';
+
+-- create functions
+\i 'functions/fn_postcodesfromsectors.sql';
