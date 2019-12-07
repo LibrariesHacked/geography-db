@@ -11,7 +11,7 @@
 set client_encoding = 'UTF8';
 
 -- create tables
-\i 'tables/tbl_postcode_lookups.sql';
+\i 'tables/tbl_postcode_lookup.sql';
 
 -- load in data
 \i 'load.sql';
@@ -20,4 +20,4 @@ set client_encoding = 'UTF8';
 \i 'views/vw_postcodes.sql';
 
 -- create functions
-\i 'functions/fn_postcodesfromsectors.sql';
+\i 'functions/fn_postcodelsoasfromsectors.sql';

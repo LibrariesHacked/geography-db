@@ -25,5 +25,6 @@ create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_tr
 create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
 create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
 create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
+create index idx_postcodelookup_postcode_sector_trimmed on postcode_lookup (postcode_sector_trimmed);
 
 vacuum analyze;
