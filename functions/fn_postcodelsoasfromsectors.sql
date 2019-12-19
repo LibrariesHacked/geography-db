@@ -1,4 +1,4 @@
-create or replace function fn_postcodelsoasfromsectors(postcode_sectors jsonb) returns
+create or replace function fn_postcodelsoasfromsectors(postcode_sectors json) returns
     table (
         lsoa character (9),
         postcode character varying []
@@ -7,9 +7,10 @@ $$
 begin
     return query (
         with sectors as
-            (select replace(value, ' ', '') as postcode_sector from jsonb_array_elements_text(postcode_sectors))
+            (select value as postcode_sector from json_array_elements_text(postcode_sectors)
+        )
         select
-            p.lsoa, 
+            p.lsoa,
             array_agg(p.postcode) as postcodes
         from sectors s
         join postcode_lookup p on p.postcode_sector_trimmed = s.postcode_sector

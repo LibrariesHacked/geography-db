@@ -8,6 +8,7 @@ alter table postcode_lookup add column postcode_area character varying (8);
 alter table postcode_lookup add column postcode_district character varying (8);
 alter table postcode_lookup add column postcode_sector character varying (8);
 alter table postcode_lookup add column postcode_sector_trimmed character varying (8);
+alter table postcode_lookup add column terminated boolean;
 
 select AddGeometryColumn ('public', 'postcode_lookup', 'geom', 27700, 'POINT', 2);
 
@@ -18,13 +19,14 @@ set
     postcode_district = substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),
     postcode_sector = substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),
     postcode_sector_trimmed = replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),
-    geom = st_setsrid(st_makepoint(easting, northing), 27700);
+    geom = st_setsrid(st_makepoint(easting, northing), 27700),
+    terminated = (date_of_termination is null);
 
 -- add indexes for new columns
 create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_trimmed);
 create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
 create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
 create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
-create index idx_postcodelookup_postcode_sector_trimmed on postcode_lookup (postcode_sector_trimmed);
+create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
 
 vacuum analyze;

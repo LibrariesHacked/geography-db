@@ -5,6 +5,7 @@ select
     p.postcode_sector,
     p.postcode_district,
     p.postcode_area,
+    p.terminated,
     p.oa,
     p.lsoa,
     p.msoa,
