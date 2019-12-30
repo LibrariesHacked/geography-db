@@ -1,4 +1,3 @@
-
 -- import postcode_lookup
 \copy postcode_lookup from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude;
 
@@ -12,6 +11,10 @@ alter table postcode_lookup add column terminated boolean;
 
 select AddGeometryColumn ('public', 'postcode_lookup', 'geom', 27700, 'POINT', 2);
 
+-- Set nulls instead of empty strings
+update postcode_lookup set lsoa = null where lsoa = '';
+update postcode_lookup set date_of_termination = null where date_of_termination = '';
+
 update postcode_lookup
 set 
     postcode_trimmed = replace(postcode, ' ', ''),
@@ -20,13 +23,16 @@ set
     postcode_sector = substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),
     postcode_sector_trimmed = replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),
     geom = st_setsrid(st_makepoint(easting, northing), 27700),
-    terminated = (date_of_termination is null);
+    terminated = (date_of_termination is not null);
 
 -- add indexes for new columns
 create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_trimmed);
 create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
 create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
 create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
+create index idx_postcodelookup_terminated on postcode_lookup (terminated);
 create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
+create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa, postcode);
+
 
 vacuum analyze;
