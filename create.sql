@@ -12,6 +12,7 @@ set client_encoding = 'UTF8';
 
 -- create tables
 \i 'tables/tbl_postcode_lookup.sql';
+\i 'tables/tbl_lsoa_boundary.sql';
 
 -- load in data
 \i 'load.sql';
@@ -21,3 +22,5 @@ set client_encoding = 'UTF8';
 
 -- create functions
 \i 'functions/fn_postcodelsoasfromsectors.sql';
+
+vacuum analyze;
