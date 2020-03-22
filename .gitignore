@@ -1,2 +1,5 @@
-data/postcode_lookup.csv
-data/lsoa_boundaries*
+postcode_lookup.csv
+lad_boundaries.csv
+county_boundaries.csv
+lsoa_boundaries.csv
+lsoa_boundaries.csv

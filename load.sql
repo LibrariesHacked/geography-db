@@ -30,7 +30,6 @@ create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_tr
 create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
 create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
 create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
-create index idx_postcodelookup_terminated on postcode_lookup (terminated);
 create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
 create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa, postcode);
 
@@ -45,11 +44,11 @@ create table lsoas_temp (
     st_lengths numeric
 );
 
+-- load lsoas
+\copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;
+
 insert into lsoa_boundary(lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, geom)
-select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_setsrid(st_geomfromtext(WKT))
+select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_transform(st_geomfromtext(WKT, 4326), 27700)
 from lsoas_temp;
 
 drop table lsoas_temp;
-
--- load lsoas
-\copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;

@@ -1,1 +1,1 @@
-create database geography;
+create database geography_test;

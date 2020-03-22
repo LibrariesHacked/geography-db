@@ -2,7 +2,7 @@
 \i 'database/db_geography.sql';
 
 -- switch to using the database
-\c geography;
+\c geography_test;
 
 -- setup any extensions
 \i 'database/db_extensions.sql';
