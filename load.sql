@@ -33,7 +33,7 @@ create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sec
 create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
 create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa, postcode);
 
--- temporary table to load lsoas
+-- Load LSOAs
 create table lsoas_temp (
     WKT text,
     objectid text,
@@ -43,12 +43,28 @@ create table lsoas_temp (
     st_areasha numeric,
     st_lengths numeric
 );
-
--- load lsoas
 \copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;
-
 insert into lsoa_boundary(lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, geom)
 select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_transform(st_geomfromtext(WKT, 4326), 27700)
 from lsoas_temp;
-
 drop table lsoas_temp;
+
+-- Load LADs WKT,objectid,lad19cd,lad19nm,lad19nmw,bng_e,bng_n,long,lat,st_areasha,st_lengths
+create table lads_temp (
+    WKT text,
+    objectid text,
+    lad19cd character (9),
+    lad19nm character varying(200),
+    lad19nmw character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy lads_temp from 'data/lad_boundaries.csv' csv header;
+insert into lad_boundary(lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, geom)
+select lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+from lads_temp;
+drop table lads_temp;
