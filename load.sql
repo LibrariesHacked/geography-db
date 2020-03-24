@@ -49,7 +49,26 @@ select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_transform(st_ge
 from lsoas_temp;
 drop table lsoas_temp;
 
--- Load LADs WKT,objectid,lad19cd,lad19nm,lad19nmw,bng_e,bng_n,long,lat,st_areasha,st_lengths
+-- Load Counties
+create table counties_temp (
+    WKT text,
+    objectid text,
+    cty19cd character (9),
+    cty19nm character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy counties_temp from 'data/county_boundaries.csv' csv header;
+insert into county_boundary(cty19cd, cty19nm, st_areasha, st_lengths, geom)
+select cty19cd, cty19nm, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+from counties_temp;
+drop table counties_temp;
+
+-- Load LADs
 create table lads_temp (
     WKT text,
     objectid text,
