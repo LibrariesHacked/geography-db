@@ -12,18 +12,27 @@ set client_encoding = 'UTF8';
 
 -- create tables
 \i 'tables/tbl_county_boundary.sql';
+\i 'tables/tbl_country_boundary.sql';
 \i 'tables/tbl_lad_boundary.sql';
 \i 'tables/tbl_lsoa_boundary.sql';
+\i 'tables/tbl_region_boundary.sql';
+\i 'tables/tbl_ward_boundary.sql';
 \i 'tables/tbl_postcode_lookup.sql';
+\i 'tables/tbl_administrative_lookup.sql';
+\i 'tables/tbl_lower_upper_lookup.sql';
 
 -- load in data
 \i 'load.sql';
 
 -- create views
 \i 'views/vw_county_boundaries.sql';
+\i 'views/vw_country_boundaries.sql';
 \i 'views/vw_lad_boundaries.sql';
 \i 'views/vw_lsoa_boundaries.sql';
+\i 'views/vw_region_boundaries.sql';
+\i 'views/vw_ward_boundaries.sql';
 \i 'views/vw_postcodes.sql';
+\i 'views/vw_library_boundaries.sql';
 
 -- create functions
 \i 'functions/fn_counties_mvt.sql';
