@@ -36,8 +36,12 @@ set client_encoding = 'UTF8';
 
 -- create functions
 \i 'functions/fn_counties_mvt.sql';
+\i 'functions/fn_countries_mvt.sql';
 \i 'functions/fn_lads_mvt.sql';
+\i 'functions/fn_library_authorities_mvt.sql';
 \i 'functions/fn_lsoas_mvt.sql';
+\i 'functions/fn_regions_mvt.sql';
+\i 'functions/fn_wards_mvt.sql';
 \i 'functions/fn_postcodelsoasfromsectors.sql';
 
 vacuum analyze;
