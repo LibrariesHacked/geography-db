@@ -6,3 +6,4 @@ create table lower_upper_lookup (
 
 create unique index idx_lowerupperlookup_ltla19cd_utla19cd on lower_upper_lookup (ltla19cd, utla19cd);
 cluster lower_upper_lookup using idx_lowerupperlookup_ltla19cd_utla19cd;
+create index idx_lowerupperlookup_utla19cd on lower_upper_lookup (utla19cd);

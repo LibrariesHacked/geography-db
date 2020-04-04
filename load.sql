@@ -51,6 +51,7 @@ insert into county_boundary(cty19cd, cty19nm, st_areasha, st_lengths, geom)
 select cty19cd, cty19nm, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from counties_temp;
 drop table counties_temp;
+update county_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
 
 -- Load countries
 create table countries_temp (
@@ -91,6 +92,7 @@ insert into lad_boundary(lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, geo
 select lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from lads_temp;
 drop table lads_temp;
+update lad_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
 
 -- Load LSOAs
 create table lsoas_temp (

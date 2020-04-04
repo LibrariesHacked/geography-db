@@ -35,6 +35,7 @@ set client_encoding = 'UTF8';
 \i 'views/vw_library_boundaries.sql';
 
 -- create functions
+\i 'functions/fn_bbox.sql';
 \i 'functions/fn_counties_mvt.sql';
 \i 'functions/fn_countries_mvt.sql';
 \i 'functions/fn_lads_mvt.sql';
