@@ -13,4 +13,4 @@ from (
 return tile;
 end;
 $$
-language plpgsql;W
+language plpgsql;
