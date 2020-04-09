@@ -21,9 +21,6 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_administrative_lookup.sql';
 \i 'tables/tbl_lower_upper_lookup.sql';
 
--- load in data
-\i 'load.sql';
-
 -- create views
 \i 'views/vw_county_boundaries.sql';
 \i 'views/vw_country_boundaries.sql';
@@ -44,5 +41,8 @@ set client_encoding = 'UTF8';
 \i 'functions/fn_regions_mvt.sql';
 \i 'functions/fn_wards_mvt.sql';
 \i 'functions/fn_postcodelsoasfromsectors.sql';
+
+-- load in data
+\i 'load.sql';
 
 vacuum analyze;

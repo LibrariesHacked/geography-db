@@ -1,37 +1,53 @@
--- import postcode_lookup
-\copy postcode_lookup from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude;
-
--- add columns for postcode lookup
-alter table postcode_lookup add column postcode_trimmed character varying (8);
-alter table postcode_lookup add column postcode_area character varying (8);
-alter table postcode_lookup add column postcode_district character varying (8);
-alter table postcode_lookup add column postcode_sector character varying (8);
-alter table postcode_lookup add column postcode_sector_trimmed character varying (8);
-alter table postcode_lookup add column terminated boolean;
-
-select AddGeometryColumn ('public', 'postcode_lookup', 'geom', 27700, 'POINT', 2);
-
--- Set nulls instead of empty strings
-update postcode_lookup set lsoa = null where lsoa = '';
-update postcode_lookup set date_of_termination = null where date_of_termination = '';
-
-update postcode_lookup
-set 
-    postcode_trimmed = replace(postcode, ' ', ''),
-    postcode_area = substring(postcode, '^[a-zA-Z][a-zA-Z]?'),
-    postcode_district = substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),
-    postcode_sector = substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),
-    postcode_sector_trimmed = replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),
-    geom = st_setsrid(st_makepoint(easting, northing), 27700),
-    terminated = (date_of_termination is not null);
-
--- add indexes for new columns
-create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_trimmed);
-create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
-create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
-create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
-create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
-create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa, postcode);
+-- Load postcodes
+create table postcode_lookup_temp (
+    postcode_7 character varying (7),
+    postcode_8 character varying (8),
+    postcode character varying (10),
+    date_of_introduction character varying (6),
+    date_of_termination character varying (6),
+    user_type integer,
+    easting numeric,
+    northing numeric,
+    positional_quality_indicator integer,
+    oa character varying (9),
+    county character varying (9),
+    county_electoral_division character varying (9),
+    district character varying (9),
+    ward character varying (9),
+    health_area character varying (9),
+    nhs_region character varying (9),
+    country character varying (9),
+    region character varying (9),
+    parliamentary_constituency character varying (9),
+    european_electoral_region character varying (9),
+    learning_region character varying (9),
+    travel_to_work_area character varying (9),
+    primary_care_trust character varying (9),
+    nuts character varying (9),
+    park character varying (9),
+    lsoa character varying (9),
+    msoa character varying (9),
+    workplace_zone character varying (9),
+    clinical_commissioning_group character varying (9),
+    built_up_area character varying (9),
+    built_up_area_subdivision character varying (9),
+    rural_urban_classification character varying (2),
+    oa_classification character varying (3),
+    latitude numeric,
+    longitude numeric,
+    local_enterprise_partnership_1 character varying (9),
+    local_enterprise_partnership_2 character varying (9),
+    police_force_area character varying (9),
+    imd integer,
+    cancer_alliance character varying (9),
+    sustainability_transformation_partnership character (9)
+);
+\copy postcode_lookup_temp from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,date_of_termination;
+insert into postcode_lookup(postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,postcode_trimmed,postcode_area,postcode_district,postcode_sector,postcode_sector_trimmed,terminated)
+select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,
+replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),(date_of_termination is not null)
+from postcode_lookup_temp;
+drop table postcode_lookup_temp;
 
 -- Load counties
 create table counties_temp (
@@ -72,6 +88,7 @@ insert into country_boundary(ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengt
 select ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from countries_temp;
 drop table countries_temp;
+update country_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
 
 -- Load LADs
 create table lads_temp (
@@ -182,3 +199,17 @@ insert into lower_upper_lookup(ltla19cd, utla19cd)
 select ltla19cd, utla19cd
 from lower_upper_lookup_temp;
 drop table lower_upper_lookup_temp;
+
+update postcode_lookup p
+set library_service = 'N92000002'
+where p.country = 'N92000002';
+
+update postcode_lookup p
+set library_service = lu.utla19cd
+from lower_upper_lookup lu
+where lu.utla19cd = p.county;
+
+update postcode_lookup
+set library_service = lb.utla19cd
+from postcode_lookup p
+join vw_library_boundaries lb on lb.utla19cd = p.district;

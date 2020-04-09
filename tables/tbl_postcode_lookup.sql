@@ -39,9 +39,28 @@ create table postcode_lookup (
     police_force_area character varying (9),
     imd integer,
     cancer_alliance character varying (9),
-    sustainability_transformation_partnership character (9)
+    sustainability_transformation_partnership character (9),
+    postcode_trimmed character varying (8),
+    postcode_area character varying (8),
+    postcode_district character varying (8),
+    postcode_sector character varying (8),
+    postcode_sector_trimmed character varying (8),
+    terminated boolean,
+    library_service character varying (9)
 );
 
-create unique index idx_postcodelookup_postcode on postcode_lookup (postcode);
+select AddGeometryColumn ('public', 'postcode_lookup', 'geom', 27700, 'POINT', 2);
+
+create unique index idx_postcodelookup_postcode_lsoa_district_county_country on postcode_lookup (postcode, lsoa, district, county, country);
 create index idx_postcodelookup_lsoa on postcode_lookup (lsoa);
+create index idx_postcodelookup_district on postcode_lookup (district);
+create index idx_postcodelookup_county on postcode_lookup (county);
+create index idx_postcodelookup_country on postcode_lookup (country);
 cluster postcode_lookup using idx_postcodelookup_postcode;
+create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_trimmed);
+create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
+create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);
+create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sector);
+create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa, terminated);
+create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa, postcode);
+create index idx_postcodelookup_libraryservice on postcode_lookup (library_service);
