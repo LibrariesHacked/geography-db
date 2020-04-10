@@ -1,6 +1,7 @@
 create view vw_postcodes as
 select
     p.postcode,
+    p.postcode_trimmed,
     p.postcode_sector,
     p.postcode_district,
     p.postcode_area,
