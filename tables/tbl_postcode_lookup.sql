@@ -56,7 +56,7 @@ create index idx_postcodelookup_lsoa on postcode_lookup (lsoa);
 create index idx_postcodelookup_district on postcode_lookup (district);
 create index idx_postcodelookup_county on postcode_lookup (county);
 create index idx_postcodelookup_country on postcode_lookup (country);
-cluster postcode_lookup using idx_postcodelookup_postcode;
+cluster postcode_lookup using idx_postcodelookup_postcode_lsoa_district_county_country;
 create index idx_postcodelookup_postcode_trimmed on postcode_lookup (postcode_trimmed);
 create index idx_postcodelookup_postcode_area on postcode_lookup (postcode_area);
 create index idx_postcodelookup_postcode_district on postcode_lookup (postcode_district);

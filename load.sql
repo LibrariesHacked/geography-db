@@ -42,7 +42,7 @@ create table postcode_lookup_temp (
     cancer_alliance character varying (9),
     sustainability_transformation_partnership character (9)
 );
-\copy postcode_lookup_temp from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,date_of_termination;
+\copy postcode_lookup_temp from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,district,ward,county,region,country,date_of_termination;
 insert into postcode_lookup(postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,postcode_trimmed,postcode_area,postcode_district,postcode_sector,postcode_sector_trimmed,terminated)
 select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,
 replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),(date_of_termination is not null)
@@ -200,16 +200,28 @@ select ltla19cd, utla19cd
 from lower_upper_lookup_temp;
 drop table lower_upper_lookup_temp;
 
+-- Northern Island library service
 update postcode_lookup p
 set library_service = 'N92000002'
 where p.country = 'N92000002';
 
+-- England county library services 
 update postcode_lookup p
 set library_service = lu.utla19cd
 from lower_upper_lookup lu
-where lu.utla19cd = p.county;
+where lu.utla19cd = p.county
+and p.country = 'E92000001';
 
-update postcode_lookup
-set library_service = lb.utla19cd
-from postcode_lookup p
-join vw_library_boundaries lb on lb.utla19cd = p.district;
+-- England and Wales district library Services
+update postcode_lookup p
+set library_service = lu.utla19cd
+from lower_upper_lookup lu
+where lu.utla19cd = p.district
+and p.country in ('E92000001', 'W92000004');
+
+-- Scotland district library services
+update postcode_lookup p
+set library_service = lb.lad19cd
+from lad_boundary lb
+where lb.lad19cd = p.district
+and p.country = 'S92000003';
