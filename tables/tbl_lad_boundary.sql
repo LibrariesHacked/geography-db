@@ -7,7 +7,7 @@ create table lad_boundary (
 );
 
 select AddGeometryColumn ('public', 'lad_boundary', 'geom', 27700, 'MULTIPOLYGON', 2);
-select AddGeometryColumn ('public', 'lad_boundary', 'bbox', 27700, 'POLYGON', 2);
+select AddGeometryColumn ('public', 'lad_boundary', 'bbox', 3857, 'POLYGON', 2);
 
 create unique index idx_ladboundary_lad19cd on lad_boundary (lad19cd);
 cluster lad_boundary using idx_ladboundary_lad19cd;

@@ -7,7 +7,7 @@ create table country_boundary (
 );
 
 select AddGeometryColumn ('public', 'country_boundary', 'geom', 27700, 'MULTIPOLYGON', 2);
-select AddGeometryColumn ('public', 'country_boundary', 'bbox', 27700, 'POLYGON', 2);
+select AddGeometryColumn ('public', 'country_boundary', 'bbox', 3857, 'POLYGON', 2);
 
 create unique index idx_countryboundary_ctry18cd on country_boundary (ctry18cd);
 cluster country_boundary using idx_countryboundary_ctry18cd;

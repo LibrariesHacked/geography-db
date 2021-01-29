@@ -1,15 +1,25 @@
-create or replace function fn_lads_mvt(x integer, y integer, z integer) returns bytea as 
+create or replace function fn_lads_mvt(tile_x integer, tile_y integer, zoom integer) returns bytea as 
 $$
-declare 
-    bbox geometry := fn_bbox(x, y, z);
+declare
+  layer_name character varying (100) := 'lad_boundaries';
+  tile_bbox geometry := fn_bbox(tile_x, tile_y, zoom);
 	tile bytea;
 begin
-select st_asmvt(s, 'lad_boundary', 4096, 'mvt_geom') into tile
+
+select g.tile into tile from generated_mvt g where g.layer = layer_name and g.x = tile_x and g.y = tile_y and g.z = zoom;
+if found then 
+  return tile;
+end if;
+
+select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-    select lad19cd, lad19nm, lad19nmw, st_asmvtgeom(st_transform(geom, 3857), bbox, 4096, 256, true) as mvt_geom
-    from lad_boundary
-    where st_intersects(st_transform(geom, 3857), bbox)
+  select l.lad19cd, l.lad19nm, st_asmvtgeom(st_transform(l.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  from lad_boundary l
+  where l.bbox && tile_bbox
 ) as s;
+
+insert into generated_mvt(layer, x, y, z, tile) values(layer_name, tile_x, tile_y, zoom, tile);
+
 return tile;
 end;
 $$

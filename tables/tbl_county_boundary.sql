@@ -6,7 +6,7 @@ create table county_boundary (
 );
 
 select AddGeometryColumn ('public', 'county_boundary', 'geom', 27700, 'MULTIPOLYGON', 2);
-select AddGeometryColumn ('public', 'county_boundary', 'bbox', 27700, 'POLYGON', 2);
+select AddGeometryColumn ('public', 'county_boundary', 'bbox', 3857, 'POLYGON', 2);
 
 create unique index idx_countyboundary_cty19cd on county_boundary (cty19cd);
 cluster county_boundary using idx_countyboundary_cty19cd;

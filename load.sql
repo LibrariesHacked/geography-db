@@ -67,7 +67,7 @@ insert into county_boundary(cty19cd, cty19nm, st_areasha, st_lengths, geom)
 select cty19cd, cty19nm, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from counties_temp;
 drop table counties_temp;
-update county_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
+update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load countries
 create table countries_temp (
@@ -88,7 +88,7 @@ insert into country_boundary(ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengt
 select ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from countries_temp;
 drop table countries_temp;
-update country_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
+update country_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load LADs
 create table lads_temp (
@@ -109,7 +109,7 @@ insert into lad_boundary(lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, geo
 select lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
 from lads_temp;
 drop table lads_temp;
-update lad_boundary set bbox = st_snaptogrid(st_envelope(geom), 1);
+update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load LSOAs
 create table lsoas_temp (
@@ -126,6 +126,7 @@ insert into lsoa_boundary(lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths,
 select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_transform(st_geomfromtext(WKT, 4326), 27700)
 from lsoas_temp;
 drop table lsoas_temp;
+update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load regions
 create table regions_temp (
@@ -200,7 +201,7 @@ select ltla19cd, utla19cd
 from lower_upper_lookup_temp;
 drop table lower_upper_lookup_temp;
 
--- Northern Island library service
+-- Northern Ireland library service
 update postcode_lookup p
 set library_service = 'N92000002'
 where p.country = 'N92000002';
@@ -225,3 +226,8 @@ set library_service = lb.lad19cd
 from lad_boundary lb
 where lb.lad19cd = p.district
 and p.country = 'S92000003';
+
+
+-- Pre-generate MVT 
+select fn_generate_mvt('fn_library_authorities_mvt', 0, 9);
+select fn_generate_mvt('fn_lsoas_mvt', 0, 9);
