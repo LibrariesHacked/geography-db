@@ -15,6 +15,7 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_country_boundary.sql';
 \i 'tables/tbl_lad_boundary.sql';
 \i 'tables/tbl_lsoa_boundary.sql';
+\i 'tables/tbl_lsoa_population.sql';
 \i 'tables/tbl_region_boundary.sql';
 \i 'tables/tbl_ward_boundary.sql';
 \i 'tables/tbl_postcode_lookup.sql';

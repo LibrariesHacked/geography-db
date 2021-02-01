@@ -13,8 +13,9 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select b.lsoa11cd, st_asmvtgeom(st_transform(b.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  select b.lsoa11cd, p.population, st_asmvtgeom(st_transform(b.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
   from lsoa_boundary b
+  join lsoa_population p on p.lsoa11cd = b.lsoa11cd
   where b.bbox && tile_bbox
 ) as s;
 

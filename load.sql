@@ -128,6 +128,9 @@ from lsoas_temp;
 drop table lsoas_temp;
 update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
+-- Load LSOA population
+\copy lsoa_population from 'data/lsoa_population.csv' csv header;
+
 -- Load regions
 create table regions_temp (
     WKT text,
