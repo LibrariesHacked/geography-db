@@ -131,6 +131,72 @@ update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 385
 -- Load LSOA population
 \copy lsoa_population from 'data/lsoa_population.csv' csv header;
 
+-- Load LSOA IMD
+\copy lsoa_imd from 'data/lsoa_imd.csv' csv header;
+
+-- Load LSOA WIMD
+\copy lsoa_wimd from 'data/lsoa_wimd.csv' csv header;
+
+-- Load Data zones
+create table datazones_temp (
+    WKT text,
+    DataZone character (9),
+    Name character varying (200),
+    TotPop2011 integer,
+    ResPop2011 integer,
+    HHCnt2011 integer,
+    StdAreaHa numeric,
+    StdAreaKm2 numeric,
+    Shape_Leng numeric,
+    Shape_Area numeric
+);
+\copy datazones_temp from 'data/datazone_boundaries.csv' csv header;
+insert into datazone_boundary(datazone, name, totpop2011, respop2011, hhcnt2011, stdareaha, stdareakm2, shape_leng, shape_area, geom)
+select datazone, name, totpop2011, respop2011, hhcnt2011, stdareaha, stdareakm2, shape_leng, shape_area, st_geomfromtext(WKT, 27700)
+from datazones_temp;
+drop table datazones_temp;
+update datazone_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+
+-- Load datazone IMD and population (it is from the same source)
+\copy datazone_imd_population from 'data/datazone_imd_population.csv' csv header;
+
+-- Load NI SOAs
+create table ni_sa_temp (
+    WKT text,
+    SA2011 character (9),
+    SOA2011 character (10),
+    X_COORD numeric,
+    Y_COORD numeric,
+    Hectares numeric
+);
+\copy ni_sa_temp from 'data/ni_sa_boundaries.csv' csv header;
+insert into ni_sa_boundary(sa_code, soa_code, geom)
+select SA2011, SOA2011, st_geomfromtext(WKT, 29902)
+from ni_sa_temp;
+drop table ni_sa_temp;
+update ni_sa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+
+-- Load NI SA IMD
+create table ni_sa_imd_temp (
+  sa_code character varying(9),
+  imd_rank integer,
+  income_rank integer,
+  employment_rank integer,
+  health_rank integer,
+  education_rank integer,
+  services_rank integer,
+  environment_rank integer,
+  crime_rank integer
+);
+\copy ni_sa_imd_temp from 'data/ni_imd.csv' csv header;
+insert into ni_sa_imd(sa_code, imd_decile, imd_rank, income_rank, employment_rank, health_rank, education_rank, services_rank, environment_rank, crime_rank)
+select sa_code, ntile(10) over (order by imd_rank asc), imd_rank, income_rank, employment_rank, health_rank, education_rank, services_rank, environment_rank, crime_rank
+from ni_sa_imd_temp;
+drop table ni_sa_imd_temp;
+
+-- Load NI SA Population
+\copy ni_sa_population from 'data/ni_population.csv' csv header;
+
 -- Load regions
 create table regions_temp (
     WKT text,
@@ -232,5 +298,11 @@ and p.country = 'S92000003';
 
 
 -- Pre-generate MVT 
-select fn_generate_mvt('fn_library_authorities_mvt', 0, 9);
-select fn_generate_mvt('fn_lsoas_mvt', 0, 9);
+
+insert into generated_mvt_type(type)
+values 
+    ('library_authority_boundaries'),
+    ('lsoa_boundaries');
+
+select fn_generate_mvt('fn_library_authorities_mvt', 0, 12);
+select fn_generate_mvt('fn_lsoas_mvt', 0, 14);

@@ -16,22 +16,32 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_lad_boundary.sql';
 \i 'tables/tbl_lsoa_boundary.sql';
 \i 'tables/tbl_lsoa_population.sql';
+\i 'tables/tbl_lsoa_imd.sql';
+\i 'tables/tbl_datazone_boundary.sql';
+\i 'tables/tbl_datazone_imd_population.sql';
+\i 'tables/tbl_ni_sa_boundary.sql';
+\i 'tables/tbl_ni_sa_imd.sql';
+\i 'tables/tbl_ni_sa_population.sql';
 \i 'tables/tbl_region_boundary.sql';
 \i 'tables/tbl_ward_boundary.sql';
 \i 'tables/tbl_postcode_lookup.sql';
 \i 'tables/tbl_administrative_lookup.sql';
 \i 'tables/tbl_lower_upper_lookup.sql';
+\i 'tables/tbl_generated_mvt_type.sql';
 \i 'tables/tbl_generated_mvt.sql';
+
 
 -- create views
 \i 'views/vw_county_boundaries.sql';
 \i 'views/vw_country_boundaries.sql';
 \i 'views/vw_lad_boundaries.sql';
 \i 'views/vw_lsoa_boundaries.sql';
+\i 'views/vw_lsoa.sql';
 \i 'views/vw_region_boundaries.sql';
 \i 'views/vw_ward_boundaries.sql';
 \i 'views/vw_postcodes.sql';
 \i 'views/vw_library_boundaries.sql';
+\i 'views/vw_smallareas_uk.sql';
 
 -- create functions
 \i 'functions/fn_bbox.sql';
