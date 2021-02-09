@@ -112,18 +112,22 @@ drop table lads_temp;
 update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load LSOAs
-create table lsoas_temp (
+create table lsoas_temp ( -- WKT,OBJECTID,LSOA11CD,LSOA11NM,BNG_E,BNG_N,LONG_,LAT,Shape_Leng,Shape__Are,Shape__Len
     WKT text,
     objectid text,
     lsoa11cd character (9),
     lsoa11nm character varying(200),
-    lsoa11nmw character varying(200),
-    st_areasha numeric,
-    st_lengths numeric
+    bng_e numeric,
+    bng_n numeric,
+    long_ numeric,
+    lat numeric,
+    shape_leng numeric,
+    shape__are numeric,
+    shape__len numeric
 );
 \copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;
-insert into lsoa_boundary(lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, geom)
-select lsoa11cd, lsoa11nm, lsoa11nmw, st_areasha, st_lengths, st_transform(st_geomfromtext(WKT, 4326), 27700)
+insert into lsoa_boundary(lsoa11cd, lsoa11nm, st_areasha, st_lengths, geom)
+select lsoa11cd, lsoa11nm, shape__are, shape__len, st_geomfromtext(WKT, 27700)
 from lsoas_temp;
 drop table lsoas_temp;
 update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
@@ -298,11 +302,10 @@ and p.country = 'S92000003';
 
 
 -- Pre-generate MVT 
-
 insert into generated_mvt_type(type)
 values 
     ('library_authority_boundaries'),
     ('lsoa_boundaries');
 
 select fn_generate_mvt('fn_library_authorities_mvt', 0, 12);
-select fn_generate_mvt('fn_lsoas_mvt', 0, 14);
+select fn_generate_mvt('fn_lsoas_mvt', 0, 12);

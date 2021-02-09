@@ -1,7 +1,6 @@
 create table lsoa_boundary (
     lsoa11cd character (9),
     lsoa11nm character varying(200),
-    lsoa11nmw character varying(200),
     st_areasha numeric,
     st_lengths numeric
 );

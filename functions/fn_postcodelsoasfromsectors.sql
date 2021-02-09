@@ -10,12 +10,12 @@ begin
       (select value as postcode_sector from json_array_elements_text(postcode_sectors)
     )
     select
-      coalesce(p.lsoa, 'Unknown') as lsoa,
+      coalesce(p.smallarea, 'Unknown') as lsoa,
       array_agg(p.postcode) as postcodes
     from sectors s
-    join postcode_lookup p on p.postcode_sector_trimmed = s.postcode_sector
+    join vw_postcode_smallarea_uk p on p.postcode_sector_trimmed = s.postcode_sector
     where p.terminated is false
-    group by coalesce(p.lsoa, 'Unknown')
+    group by coalesce(p.smallarea, 'Unknown')
     union all
     select
       'Terminated' as lsoa,
