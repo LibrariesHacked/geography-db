@@ -23,8 +23,8 @@ union all
 select 
 	d.datazone as code,
 	d.name as area_name,
+  dip.population,
 	dip.simd_decile as imd_decile,
-	dip.population,
 	st_transform(d.geom, 3857) as geom,
   d.bbox as bbox
 from datazone_boundary d
@@ -33,8 +33,8 @@ union all
 select 
   nb.sa_code as code,
   nb.soa_code as area_name,
-  ni.imd_decile as imd_decile,
   np.population as population,
+  ni.imd_decile as imd_decile,
   st_transform(nb.geom, 3857) as geom,
   nb.bbox as bbox
 from ni_sa_boundary nb
