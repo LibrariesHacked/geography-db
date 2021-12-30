@@ -14,7 +14,7 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select b.utla19cd, st_asmvtgeom(st_transform(b.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  select b.code, st_asmvtgeom(st_transform(b.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
   from vw_library_boundaries b
   where b.bbox && tile_bbox
 ) as s;

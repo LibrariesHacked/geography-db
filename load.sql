@@ -300,7 +300,6 @@ from lad_boundary lb
 where lb.lad19cd = p.district
 and p.country = 'S92000003';
 
-
 -- Pre-generate MVT 
 insert into generated_mvt_type(type)
 values 
@@ -309,3 +308,56 @@ values
 
 select fn_generate_mvt('fn_library_authorities_mvt', 0, 12);
 select fn_generate_mvt('fn_lsoas_mvt', 0, 12);
+
+-- Local authorities
+create table staging_local_authority (
+  "local-authority-code" text,
+  "official-name" text,
+  "nice-name" text,
+  "gss-code" text,
+  "start-date" text,
+  "end-date" text,
+  "replaced-by" text,
+  "nation" text,
+  "region" text,
+  "local-authority-type" text,
+  "local-authority-type-name" text,
+  "county-la" text,
+  "combined-authority" text,
+  "alt-names" text,
+  "former-gss-codes" text,
+  "notes" text,
+  "current-authority" text,
+  "BS-6879" text,
+  "ecode" text,
+  "even-older-register-and-code" text,
+  "gov-uk-slug" text,
+  "area" text,
+  "pop-2020" text,
+  "x" text,
+  "y" text,
+  "long" text,
+  "lat" text,
+  "powers" text,
+  "lower_or_unitary" text,
+  "mapit-area-code" text,
+  "ofcom" text,
+  "old-ons-la-code" text,
+  "old-register-and-code" text,
+  "open-council-data-id" text,
+  "os-file" text,
+  "os" text,
+  "snac" text,
+  "wdtk-id" text
+);
+\copy staging_local_authority from 'data/uk_local_authorities.csv' csv header;
+
+insert into administrative_names (code, name, nice_name, nation, region)
+select
+  "gss-code",
+  "official-name",
+  "nice-name",
+  "nation",
+  "region" from staging_local_authority where "gss-code" is not null;
+
+drop table staging_local_authority;

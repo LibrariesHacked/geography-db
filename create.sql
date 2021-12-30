@@ -27,6 +27,7 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_ward_boundary.sql';
 \i 'tables/tbl_postcode_lookup.sql';
 \i 'tables/tbl_administrative_lookup.sql';
+\i 'tables/tbl_administrative_names.sql';
 \i 'tables/tbl_lower_upper_lookup.sql';
 \i 'tables/tbl_generated_mvt_type.sql';
 \i 'tables/tbl_generated_mvt.sql';
