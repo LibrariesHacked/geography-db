@@ -2,15 +2,21 @@
 
 A database to hold common UK geography.
 
+## Datasets
+
+| Name | Current data link | Stored locally |
+| ---- | ----------------- | -------------- |
+| Counties (December 2021) EN BFC | 
+
 
 Counties (December 2021) EN BFC
-https://geoportal.statistics.gov.uk/datasets/ons::counties-december-2021-en-bfc-1/explore
+https://geoportal.statistics.gov.uk/datasets/ons::counties-december-2021-en-bfc-1/
 
 
 
 
-Lower Tier Local Authority to Upper Tier Local Authority (April 2021) Lookup in England and Wales
-https://geoportal.statistics.gov.uk/datasets/ons::lower-tier-local-authority-to-upper-tier-local-authority-april-2021-lookup-in-england-and-wales-1/explore
+Lower Tier Local Authority to Upper Tier Local Authority (April 2023) Lookup in England and Wales
+https://geoportal.statistics.gov.uk/datasets/ons::lower-tier-local-authority-to-upper-tier-local-authority-april-2023-lookup-in-england-and-wales/explore
 
 
 
@@ -41,3 +47,10 @@ https://www.gov.scot/publications/scottish-index-of-multiple-deprivation-2020v2-
 LSOA (Dec 2021) Boundaries Full Clipped EW (BFC)
 https://geoportal.statistics.gov.uk/datasets/ons::lsoa-dec-2021-boundaries-full-clipped-ew-bfc/explore?location=52.778212%2C-2.489483%2C6.94
 
+
+National Statistics Postcode Lookup:
+https://geoportal.statistics.gov.uk/datasets/national-statistics-postcode-lookup-2021-census-february-2023/about
+
+
+My Society Names and Codes
+https://github.com/mysociety/uk_local_authority_names_and_codes/blob/main/data/uk_local_authorities.csv
