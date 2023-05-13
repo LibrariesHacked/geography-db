@@ -52,19 +52,25 @@ drop table postcode_lookup_temp;
 -- Load counties
 create table counties_temp (
     WKT text,
-    objectid text,
-    cty19cd character (9),
-    cty19nm character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    NAME text,
+    AREA_CODE text,
+    DESCRIPTIO text,
+    FILE_NAME text,
+    NUMBER numeric,
+    NUMBER0 numeric,
+    POLYGON_ID numeric,
+    UNIT_ID numeric,
+    CODE character (9),
+    HECTARES float,
+    AREA float,
+    TYPE_CODE text,
+    DESCRIPT0 text,
+    TYPE_COD0 text,
+    DESCRIPT1 text
 );
-\copy counties_temp from 'data/county_boundaries.csv' csv header;
-insert into county_boundary(cty19cd, cty19nm, st_areasha, st_lengths, geom)
-select cty19cd, cty19nm, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+\copy counties_temp from 'data/county_region.csv' csv header;
+insert into county_boundary(ctycd, ctynm, geom)
+select CODE, NAME, st_geomfromtext(WKT, 27700)
 from counties_temp;
 drop table counties_temp;
 update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
@@ -84,8 +90,8 @@ create table countries_temp (
     st_lengths numeric
 );
 \copy countries_temp from 'data/country_boundaries.csv' csv header;
-insert into country_boundary(ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengths, geom)
-select ctry18cd, ctry18nm, ctry18nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+insert into country_boundary(ctry18cd, ctry18nm, ctry18nmw, geom)
+select ctry18cd, ctry18nm, ctry18nmw, st_geomfromtext(WKT, 27700)
 from countries_temp;
 drop table countries_temp;
 update country_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
@@ -93,41 +99,39 @@ update country_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 
 -- Load LADs
 create table lads_temp (
     WKT text,
-    objectid text,
-    lad19cd character (9),
-    lad19nm character varying(200),
-    lad19nmw character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    NAME text,
+    AREA_CODE text,
+    DESCRIPTIO text,
+    FILE_NAME text,
+    NUMBER numeric,
+    NUMBER0 numeric,
+    POLYGON_ID numeric,
+    UNIT_ID numeric,
+    CODE character (9),
+    HECTARES float,
+    AREA float,
+    TYPE_CODE text,
+    DESCRIPT0 text,
+    TYPE_COD0 text,
+    DESCRIPT1 text
 );
-\copy lads_temp from 'data/lad_boundaries.csv' csv header;
-insert into lad_boundary(lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, geom)
-select lad19cd, lad19nm, lad19nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+\copy lads_temp from 'data/district_borough_unitary_region.csv' csv header;
+insert into lad_boundary(ladcd, ladnm, geom)
+select CODE, NAME, st_geomfromtext(WKT, 27700)
 from lads_temp;
 drop table lads_temp;
 update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 -- Load LSOAs
-create table lsoas_temp ( -- WKT,OBJECTID,LSOA11CD,LSOA11NM,BNG_E,BNG_N,LONG_,LAT,Shape_Leng,Shape__Are,Shape__Len
+create table lsoas_temp (
     WKT text,
-    objectid text,
-    lsoa11cd character (9),
-    lsoa11nm character varying(200),
-    bng_e numeric,
-    bng_n numeric,
-    long_ numeric,
-    lat numeric,
-    shape_leng numeric,
-    shape__are numeric,
-    shape__len numeric
+    LSOA21CD character (9),
+    LSOA21NM text,
+    GlobalID text
 );
 \copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;
-insert into lsoa_boundary(lsoa11cd, lsoa11nm, st_areasha, st_lengths, geom)
-select lsoa11cd, lsoa11nm, shape__are, shape__len, st_geomfromtext(WKT, 27700)
+insert into lsoa_boundary(lsoacd, lsoanm, geom)
+select LSOA21CD, LSOA21NM, st_geomfromtext(WKT, 27700)
 from lsoas_temp;
 drop table lsoas_temp;
 update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
@@ -215,62 +219,49 @@ create table regions_temp (
     st_lengths numeric
 );
 \copy regions_temp from 'data/region_boundaries.csv' csv header;
-insert into region_boundary(rgn18cd, rgn18nm, st_areasha, st_lengths, geom)
-select rgn18cd, rgn18nm, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+insert into region_boundary(rgncd, rgnnm, geom)
+select rgn18cd, rgn18nm, st_geomfromtext(WKT, 27700)
 from regions_temp;
 drop table regions_temp;
 
 -- Load wards
 create table wards_temp (
     WKT text,
-    objectid text,
-    wd19cd character (9),
-    wd19nm character varying(200),
-    wd19nmw character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    NAME text,
+    AREA_CODE text,
+    DESCRIPTIO text,
+    FILE_NAME text,
+    NUMBER numeric,
+    NUMBER0 numeric,
+    POLYGON_ID numeric,
+    UNIT_ID numeric,
+    CODE character (9),
+    HECTARES float,
+    AREA float,
+    TYPE_CODE text,
+    DESCRIPT0 text,
+    TYPE_COD0 text,
+    DESCRIPT1 text
 );
 \copy wards_temp from 'data/ward_boundaries.csv' csv header;
-insert into ward_boundary(wd19cd, wd19nm, wd19nmw, st_areasha, st_lengths, geom)
-select wd19cd, wd19nm, wd19nmw, st_areasha, st_lengths, st_geomfromtext(WKT, 27700)
+insert into ward_boundary(wdcd, wdnm, geom)
+select CODE, NAME, st_geomfromtext(WKT, 27700)
 from wards_temp;
 drop table wards_temp;
 
--- administrative lookups
-create table administrative_lookup_temp (
-    wd19cd character (9),
-    wd19nm character varying (200),
-    lad19cd character (9),
-    lad19nm character varying (200),
-    cty19cd character (9),
-    cty19nm character varying (200),
-    rgn19cd character (9),
-    rgn19nm character varying (200),
-    ctry19cd character (9),
-    ctry19nm character varying (200),
-    fid integer
-);
-\copy administrative_lookup_temp from 'data/administrative_lookup.csv' csv header;
-insert into administrative_lookup(wd19cd, lad19cd, cty19cd, rgn19cd, ctry19cd)
-select wd19cd, lad19cd, cty19cd, rgn19cd, ctry19cd
-from administrative_lookup_temp;
-drop table administrative_lookup_temp;
-
 -- upper lower tier lookups
-create table lower_upper_lookup_temp ( -- LTLA19CD,LTLA19NM,UTLA19CD,UTLA19NM,FID
-    ltla19cd character (9),
-    ltla19nm character varying (200),
-    utla19cd character (9),
-    utla19nm character varying (200),
-    fid integer
+create table lower_upper_lookup_temp (
+    LTLA23CD character (9),
+    LTLA23NM text,
+    LTLA23NMW text,
+    UTLA23CD character (9),
+    UTLA23NM text,
+    UTLA23NMW text,
+    ObjectId text
 );
 \copy lower_upper_lookup_temp from 'data/lower_upper_lookup.csv' csv header;
-insert into lower_upper_lookup(ltla19cd, utla19cd)
-select ltla19cd, utla19cd
+insert into lower_upper_lookup(ltlacd, utlacd)
+select ltlacd, utlacd
 from lower_upper_lookup_temp;
 drop table lower_upper_lookup_temp;
 
@@ -283,21 +274,21 @@ where p.country = 'N92000002';
 update postcode_lookup p
 set library_service = lu.utla19cd
 from lower_upper_lookup lu
-where lu.utla19cd = p.county
+where lu.utlacd = p.county
 and p.country = 'E92000001';
 
 -- England and Wales district library Services
 update postcode_lookup p
-set library_service = lu.utla19cd
+set library_service = lu.utlacd
 from lower_upper_lookup lu
-where lu.utla19cd = p.district
+where lu.utlacd = p.district
 and p.country in ('E92000001', 'W92000004');
 
 -- Scotland district library services
 update postcode_lookup p
-set library_service = lb.lad19cd
+set library_service = lb.ladcd
 from lad_boundary lb
-where lb.lad19cd = p.district
+where lb.ladcd = p.district
 and p.country = 'S92000003';
 
 -- Pre-generate MVT 
