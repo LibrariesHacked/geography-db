@@ -1,7 +1,6 @@
 create view vw_ward_boundaries as
 select
-    w.wd19cd,
-    w.wd19nm,
-    w.wd19nmw,
+    w.wdcd,
+    w.wdnm,
     w.geom
 from ward_boundary w;

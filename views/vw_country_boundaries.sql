@@ -1,7 +1,7 @@
 create view vw_country_boundaries as
 select
-    c.ctry18cd,
-    c.ctry18nm,
-    c.ctry18nmw,
+    c.ctrycd,
+    c.ctrynm,
+    c.ctrynmw,
     c.geom
 from country_boundary c;

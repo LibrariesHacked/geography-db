@@ -13,7 +13,7 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select wd19cd, wd19nm, wd19nmw, st_asmvtgeom(st_transform(geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  select wdcd, wdnm, wdnmw, st_asmvtgeom(st_transform(geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
   from ward_boundary
   where geom && st_transform(tile_bbox, 27700)
 ) as s;

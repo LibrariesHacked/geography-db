@@ -13,7 +13,7 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select r.rgn18cd, rgn18nm, st_asmvtgeom(st_transform(r.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  select r.rgncd, rgnnm, st_asmvtgeom(st_transform(r.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
   from region_boundary r
   where r.bbox && tile_bbox
 ) as s;

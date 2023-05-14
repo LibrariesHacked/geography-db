@@ -1,7 +1,7 @@
 create view vw_smallareas_uk as
 select
-  l.lsoa11cd as code,
-  l.lsoa11nm as area_name,
+  l.lsoacd as code,
+  l.lsoanm as area_name,
   p.population as population,
   i.imd_decile as imd_decile,
   st_transform(l.geom, 3857) as geom,
@@ -14,11 +14,11 @@ join (
   from lsoa_imd
   union all
   select
-    lsoa11cd as lsoa_code,
+    lsoacd as lsoa_code,
     decile as imd_decile
   from lsoa_wimd
-) as i on i.lsoa_code =  l.lsoa11cd
-join lsoa_population p on p.lsoa11cd = l.lsoa11cd
+) as i on i.lsoa_code =  l.lsoacd
+join lsoa_population p on p.lsoacd = l.lsoacd
 union all
 select 
 	d.datazone as code,

@@ -1,7 +1,7 @@
 create view vw_lsoa as
 select
-    l.lsoa11cd,
-    l.lsoa11nm,
+    l.lsoacd,
+    l.lsoanm,
     p.population,
     i.imd_rank,
     i.imd_decile,
@@ -37,5 +37,5 @@ select
     i.outdoors_decile,
     l.geom
 from lsoa_boundary l
-join lsoa_imd i on i.lsoa_code = l.lsoa11cd
-join lsoa_population p on p.lsoa11cd = l.lsoa11cd;
+join lsoa_imd i on i.lsoa_code = l.lsoacd
+join lsoa_population p on p.lsoacd = l.lsoacd;

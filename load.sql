@@ -42,7 +42,7 @@ create table postcode_lookup_temp (
     cancer_alliance character varying (9),
     sustainability_transformation_partnership character (9)
 );
-\copy postcode_lookup_temp from 'data/postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,district,ward,county,region,country,date_of_termination;
+\copy postcode_lookup_temp from 'data/national_statistics_postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,district,ward,county,region,country,date_of_termination;
 insert into postcode_lookup(postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,postcode_trimmed,postcode_area,postcode_district,postcode_sector,postcode_sector_trimmed,terminated)
 select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,health_area,nhs_region,country,region,parliamentary_constituency,european_electoral_region,learning_region,travel_to_work_area,primary_care_trust,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,built_up_area_subdivision,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,sustainability_transformation_partnership,
 replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),(date_of_termination is not null)
@@ -78,20 +78,17 @@ update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3
 -- Load countries
 create table countries_temp (
     WKT text,
-    objectid text,
-    ctry18cd character (9),
-    ctry18nm character varying(200),
-    ctry18nmw character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    CTRY22CD character (9),
+    CTRY22NM text,
+    CTRY22NMW text,
+    BNG_E numeric,
+    BNG_N numeric,
+    LONG float,
+    LAT float
 );
 \copy countries_temp from 'data/country_boundaries.csv' csv header;
-insert into country_boundary(ctry18cd, ctry18nm, ctry18nmw, geom)
-select ctry18cd, ctry18nm, ctry18nmw, st_geomfromtext(WKT, 27700)
+insert into country_boundary(ctrycd, ctrynm, ctrynmw, geom)
+select CTRY22CD, CTRY22NM, CTRY22NMW, st_geomfromtext(WKT, 27700)
 from countries_temp;
 drop table countries_temp;
 update country_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
@@ -246,7 +243,7 @@ create table wards_temp (
 \copy wards_temp from 'data/ward_boundaries.csv' csv header;
 insert into ward_boundary(wdcd, wdnm, geom)
 select CODE, NAME, st_geomfromtext(WKT, 27700)
-from wards_temp;
+from wards_temp where TYPE_CODE != 'VA';
 drop table wards_temp;
 
 -- upper lower tier lookups
@@ -261,7 +258,7 @@ create table lower_upper_lookup_temp (
 );
 \copy lower_upper_lookup_temp from 'data/lower_upper_lookup.csv' csv header;
 insert into lower_upper_lookup(ltlacd, utlacd)
-select ltlacd, utlacd
+select LTLA23CD, UTLA23CD
 from lower_upper_lookup_temp;
 drop table lower_upper_lookup_temp;
 
@@ -272,7 +269,7 @@ where p.country = 'N92000002';
 
 -- England county library services 
 update postcode_lookup p
-set library_service = lu.utla19cd
+set library_service = lu.utlacd
 from lower_upper_lookup lu
 where lu.utlacd = p.county
 and p.country = 'E92000001';
