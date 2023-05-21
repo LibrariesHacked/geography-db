@@ -240,7 +240,7 @@ create table wards_temp (
     TYPE_COD0 text,
     DESCRIPT1 text
 );
-\copy wards_temp from 'data/ward_boundaries.csv' csv header;
+\copy wards_temp from 'data/district_borough_unitary_ward_region.csv' csv header;
 insert into ward_boundary(wdcd, wdnm, geom)
 select CODE, NAME, st_geomfromtext(WKT, 27700)
 from wards_temp where TYPE_CODE != 'VA';
@@ -294,9 +294,6 @@ values
     ('library_authority_boundaries'),
     ('lsoa_boundaries');
 
-select fn_generate_mvt('fn_library_authorities_mvt', 0, 12);
-select fn_generate_mvt('fn_lsoas_mvt', 0, 12);
-
 -- Local authorities
 create table staging_local_authority (
   "local-authority-code" text,
@@ -349,3 +346,6 @@ select
   "region" from staging_local_authority where "gss-code" is not null;
 
 drop table staging_local_authority;
+
+select fn_generate_mvt('fn_library_authorities_mvt', 0, 7);
+select fn_generate_mvt('fn_lsoas_mvt', 0, 7);
