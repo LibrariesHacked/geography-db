@@ -347,5 +347,5 @@ select
 
 drop table staging_local_authority;
 
-select fn_generate_mvt('fn_library_authorities_mvt', 0, 7);
-select fn_generate_mvt('fn_lsoas_mvt', 0, 7);
+select fn_generate_mvt('fn_library_authorities_mvt', 0, 10);
+select fn_generate_mvt('fn_lsoas_mvt', 0, 10);
