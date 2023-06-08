@@ -6,43 +6,63 @@ create table postcode_lookup_temp (
     postcode character varying (10),
     date_of_introduction character varying (6),
     date_of_termination character varying (6),
-    user_type integer,
-    easting numeric,
-    northing numeric,
-    positional_quality_indicator integer,
-    oa character varying (9),
     county character varying (9),
     county_electoral_division character varying (9),
     district character varying (9),
     ward character varying (9),
+    parish character varying (9),
+    user_type integer,
+    easting numeric,
+    northing numeric,
+    positional_quality_indicator integer,
+    health_authority character varying (9),
     nhs_region character varying (9),
     country character varying (9),
     region character varying (9),
+    standard_statistical_region integer,
     parliamentary_constituency character varying (9),
+    european_electoral_region character varying (9),
+    local_learning_and_skills_council character varying (9),
     travel_to_work_area character varying (9),
-    nuts character varying (9),
-    park character varying (9),
-    lsoa character varying (9),
-    msoa character varying (9),
+    primary_care_trust character varying (9),
+    international_territorial_level character varying (9),
+    statistical_ward character varying (6),
+    oa_01 character varying (10),
+    census_area_statistics_ward character varying (6),
+    national_park character varying (9),
+    lsoa_01 character varying (9),
+    msoa_01 character varying (9),
+    urban_rural_indicator_01 character varying (1),
+    oa_01_classification character varying (3),
+    oa_11 character varying (9),
+    lsoa_11 character varying (9),
+    msoa_11 character varying (9),
     workplace_zone character varying (9),
-    clinical_commissioning_group character varying (9),
+    sub_icb_location character varying (9),
     built_up_area character varying (9),
-    rural_urban_classification character varying (2),
-    oa_classification character varying (3),
+    built_up_area_sub_division character varying (9),
+    rural_urban_classification_11 character varying (1),
+    oa_classification_11 character varying (9),
     latitude numeric,
     longitude numeric,
     local_enterprise_partnership_1 character varying (9),
     local_enterprise_partnership_2 character varying (9),
     police_force_area character varying (9),
     imd integer,
-    icb character varying (9)
+    cancer_alliance character varying (9),
+    integrated_care_board character varying (9),
+    oa_21 character varying (9),
+    lsoa_21 character varying (9),
+    msoa_21 character varying (9)
 );
-\copy postcode_lookup_temp from 'data/national_statistics_postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,lsoa,district,ward,county,region,country,date_of_termination;
-insert into postcode_lookup(postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,nhs_region,country,region,parliamentary_constituency,travel_to_work_area,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,icb,postcode_trimmed,postcode_area,postcode_district,postcode_sector,postcode_sector_trimmed,terminated)
-select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,user_type,easting,northing,positional_quality_indicator,oa,county,county_electoral_division,district,ward,nhs_region,country,region,parliamentary_constituency,travel_to_work_area,nuts,park,lsoa,msoa,workplace_zone,clinical_commissioning_group,built_up_area,rural_urban_classification,oa_classification,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,icb,
+\copy postcode_lookup_temp from 'data/national_statistics_postcode_lookup.csv' csv header force null easting,northing,latitude,longitude,district,ward,county,region,country,date_of_termination;
+insert into postcode_lookup(postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,county,county_electoral_division,district,ward,parish,user_type,easting,northing,positional_quality_indicator,health_authority,nhs_region,country,region,standard_statistical_region,parliamentary_constituency,european_electoral_region,local_learning_and_skills_council,travel_to_work_area,primary_care_trust,international_territorial_level,statistical_ward,oa_01,census_area_statistics_ward,national_park,lsoa_01,msoa_01,urban_rural_indicator_01,oa_01_classification,oa_11,lsoa_11,msoa_11,workplace_zone,sub_icb_location,built_up_area,built_up_area_sub_division,rural_urban_classification_11,oa_classification_11,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,integrated_care_board,oa_21,lsoa_21,msoa_21,postcode_trimmed,postcode_area,postcode_district,postcode_sector,postcode_sector_trimmed,terminated)
+select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,county,county_electoral_division,district,ward,parish,user_type,easting,northing,positional_quality_indicator,health_authority,nhs_region,country,region,standard_statistical_region,parliamentary_constituency,european_electoral_region,local_learning_and_skills_council,travel_to_work_area,primary_care_trust,international_territorial_level,statistical_ward,oa_01,census_area_statistics_ward,national_park,lsoa_01,msoa_01,urban_rural_indicator_01,oa_01_classification,oa_11,lsoa_11,msoa_11,workplace_zone,sub_icb_location,built_up_area,built_up_area_sub_division,rural_urban_classification_11,oa_classification_11,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,integrated_care_board,oa_21,lsoa_21,msoa_21,
 replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),(date_of_termination is not null)
 from postcode_lookup_temp;
 drop table postcode_lookup_temp;
+
+    postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,county,county_electoral_division,district,ward,parish,user_type,easting,northing,positional_quality_indicator,health_authority,nhs_region,country,region,standard_statistical_region,parliamentary_constituency,european_electoral_region,local_learning_and_skills_council,travel_to_work_area,primary_care_trust,international_territorial_level,statistical_ward,oa_01,census_area_statistics_ward,national_park,lsoa_01,msoa_01,urban_rural_indicator_01,oa_01_classification,oa_11,lsoa_11,msoa_11,workplace_zone,sub_icb_location,built_up_area,built_up_area_sub_division,rural_urban_classification_11,oa_classification_11,latitude,longitude,local_enterprise_partnership_1,local_enterprise_partnership_2,police_force_area,imd,cancer_alliance,integrated_care_board,oa_21,lsoa_21,msoa_21
 
 -- Load counties
 create table counties_temp (

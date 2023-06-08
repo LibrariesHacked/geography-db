@@ -6,7 +6,7 @@ select
     p.postcode_district,
     p.postcode_area,
     p.terminated,
-    p.lsoa,
+    p.lsoa_11 as lsoa,
 	lb.lsoanm as lsoa_name,
     p.ward,
 	wb.wdnm as ward_name,
@@ -25,7 +25,7 @@ select
     p.easting,
     p.northing
 from postcode_lookup p 
-left join lsoa_boundary lb on lb.lsoacd = p.lsoa
+left join lsoa_boundary lb on lb.lsoacd = p.lsoa_21
 left join ward_boundary wb on wb.wdcd = p.ward
 left join lad_boundary db on db.ladcd = p.district
 left join county_boundary cb on cb.ctycd = p.county
