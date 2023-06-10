@@ -102,79 +102,85 @@ drop table regions_temp;
 
 
 -- Load counties
+-- WKT,FID,CTY23CD,CTY23NM,BNG_E,BNG_N,LONG,LAT,GlobalID,SHAPE_Leng,SHAPE_Area
 create table counties_temp_bfc (
     WKT text,
-    objectid text,
-    cty23cd character (9),
-    cty23nm character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    FID text,
+    CTY23CD character (9),
+    CTY23NM character varying(200),
+    BNG_E float,
+    BNG_N float,
+    LONG float,
+    LAT float,
+    GlobalID text,
+    SHAPE_Leng numeric,
+    SHAPE_Area numeric
 );
 \copy counties_temp_bfc from 'data/county_bfc.csv' csv header;
 insert into county_boundary(ctycd, ctynm, geom)
-select cty23cd, cty23nm, st_geomfromtext(WKT, 27700)
+select CTY23CD, CTY23NM, st_geomfromtext(WKT, 27700)
 from counties_temp_bfc;
 drop table counties_temp_bfc;
 update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 -- And generalised geometry
 create table counties_temp_bgc (
     WKT text,
-    objectid text,
-    cty23cd character (9),
-    cty23nm character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    FID text,
+    CTY23CD character (9),
+    CTY23NM character varying(200),
+    BNG_E float,
+    BNG_N float,
+    LONG float,
+    LAT float,
+    GlobalID text,
+    SHAPE_Leng numeric,
+    SHAPE_Area numeric
 );
 \copy counties_temp_bgc from 'data/county_bgc.csv' csv header;
 update county_boundary set geom_generalised = 
-    (select WKT from counties_temp_bgc where cty23cd = county_boundary.ctycd);
+    (select WKT from counties_temp_bgc where CTY23CD = county_boundary.ctycd);
 drop table counties_temp_bgc;
 
 -- Load districts
-create table districts_temp_bfc (
+-- WKT,FID,LAD23CD,LAD23NM,LAD23NMW,BNG_E,BNG_N,LONG,LAT,GlobalID,SHAPE_Leng,SHAPE_Area
+create table district_temp_bfc (
     WKT text,
-    objectid text,
-    lad23cd character (9),
-    lad23nm character varying(200),
-    lad23nmw character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    FID text,
+    LAD23CD character (9),
+    LAD23NM character varying(200),
+    LAD23NMW character varying(200),
+    BNG_E float,
+    BNG_N float,
+    LONG float,
+    LAT float,
+    GlobalID text,
+    SHAPE_Leng numeric,
+    SHAPE_Area numeric
 );
-\copy districts_temp_bfc from 'data/district_bfc.csv' csv header;
+\copy district_temp_bfc from 'data/district_bfc.csv' csv header;
 insert into lad_boundary(ladcd, ladnm, geom)
-select lad23cd, lad23nm, st_geomfromtext(WKT, 27700)
-from districts_temp_bfc;
-drop table districts_temp_bfc;
+select LAD23CD, LAD23NM, st_geomfromtext(WKT, 27700)
+from district_temp_bfc;
+drop table district_temp_bfc;
 update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
-create table districts_temp_bgc (
+create table district_temp_bgc (
     WKT text,
-    objectid text,
-    lad23cd character (9),
-    lad23nm character varying(200),
-    lad23nmw character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
+    FID text,
+    LAD23CD character (9),
+    LAD23NM character varying(200),
+    LAD23NMW character varying(200),
+    BNG_E float,
+    BNG_N float,
+    LONG float,
+    LAT float,
+    GlobalID text,
+    SHAPE_Leng numeric,
+    SHAPE_Area numeric
 );
-\copy districts_temp_bgc from 'data/districts_bgc.csv' csv header;
+\copy district_temp_bgc from 'data/district_bgc.csv' csv header;
 update lad_boundary set geom_generalised = 
-    (select WKT from districts_temp_bgc where lad23cd = lad_boundary.ladcd);
-drop table districts_temp_bgc;
+    (select WKT from district_temp_bgc where LAD23CD = lad_boundary.ladcd);
+drop table district_temp_bgc;
 
 -- Load wards
 create table wards_temp (
@@ -221,7 +227,7 @@ create table lsoas_temp_bgc (
     LSOA21NM text,
     GlobalID text
 );
-\copy lsoas_temp_bgc from 'data/lsoas_temp_bgc.csv' csv header;
+\copy lsoas_temp_bgc from 'data/lsoa_boundaries_bgc.csv' csv header;
 update lsoa_boundary set geom_generalised = 
     (select WKT from lsoas_temp_bgc where LSOA21CD = lsoa_boundary.lsoacd);
 drop table lsoas_temp_bgc; 

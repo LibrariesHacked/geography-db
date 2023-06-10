@@ -10,6 +10,7 @@ select
     ad.region,
     ad.nation,
     uk.geom,
+    uk.geom_generalised,
     uk.bbox
 from 
     (select

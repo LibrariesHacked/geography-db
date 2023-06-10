@@ -14,7 +14,7 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select s.code, s.population, s.imd_decile as imd, st_asmvtgeom(s.geom, tile_bbox, 4096, 256, true) as mvt_geom
+  select s.code, s.population, s.imd_decile as imd, st_asmvtgeom(s.geom_generalised, tile_bbox, 4096, 256, true) as mvt_geom
   from vw_smallareas_uk s
   where s.bbox && tile_bbox
 ) as s;

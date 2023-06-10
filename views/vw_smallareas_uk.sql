@@ -5,6 +5,7 @@ select
   p.population as population,
   i.imd_decile as imd_decile,
   st_transform(l.geom, 3857) as geom,
+  st_transform(l.geom, 3857) as geom_generalised,
   l.bbox as bbox
 from lsoa_boundary l
 join (
@@ -26,6 +27,7 @@ select
   dip.population,
 	dip.simd_decile as imd_decile,
 	st_transform(d.geom, 3857) as geom,
+  st_transform(d.geom, 3857) as geom_generalised,
   d.bbox as bbox
 from datazone_boundary d
 join datazone_imd_population dip on dip.datazone = d.datazone
@@ -36,6 +38,7 @@ select
   np.population as population,
   ni.imd_decile as imd_decile,
   st_transform(nb.geom, 3857) as geom,
+  st_transform(nb.geom, 3857) as geom_generalised,
   nb.bbox as bbox
 from ni_sa_boundary nb
 join ni_sa_imd ni on ni.sa_code = nb.sa_code
