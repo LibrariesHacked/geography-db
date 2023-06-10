@@ -16,6 +16,7 @@ from
         ladcd as utlacd,
         ladnm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from lad_boundary
     where ladcd in (select utlacd from upper_codes)
@@ -24,6 +25,7 @@ from
         ctycd as utlacd,
         ctynm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from county_boundary
     where ctycd in (select utlacd from upper_codes)
@@ -32,6 +34,7 @@ from
         ladcd as utlacd,
         ladnm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from lad_boundary
     where ladcd LIKE 'S%'
@@ -40,6 +43,7 @@ from
         ctrycd as utlacd,
         ctrynm as utlanm,
         geom,
+        geom as geom_generalised,
         bbox
     from country_boundary
     where ctrynm = 'Northern Ireland') as uk

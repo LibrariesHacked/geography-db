@@ -4,26 +4,26 @@ A database to hold common UK geography.
 
 ## Datasets
 
+Countries (December 2022) UK BFC
+https://geoportal.statistics.gov.uk/datasets/ons::countries-december-2022-uk-bfc/explore?location=55.215430%2C-3.316939%2C6.52
 
-Counties from Boundary Line (county_region)
-https://beta.ordnancesurvey.co.uk/products/boundary-line#get
 
-Districts from Boundary Line (district_borough_unitary_region)
-https://beta.ordnancesurvey.co.uk/products/boundary-line#get
+Counties from ONS Geoportal (Clipped - Generalised and full resolution)
+https://geoportal.statistics.gov.uk/datasets/ons::counties-may-2023-boundaries-en-bfc-2/explore
+https://geoportal.statistics.gov.uk/datasets/ons::counties-may-2023-boundaries-en-bgc-2/explore
+
+
+Districts from ONS Geoportal (Clipped - Generalised and full resolution)
+https://geoportal.statistics.gov.uk/datasets/ons::local-authority-districts-may-2023-uk-bfc-2/explore
+https://geoportal.statistics.gov.uk/datasets/ons::local-authority-districts-may-2023-uk-bgc-2/explore
+
 
 Wards from Boundary Line (district_borough_unitary_ward_region)
 https://beta.ordnancesurvey.co.uk/products/boundary-line#get
 
-LAD (Dec 2021) GB BFC
-https://geoportal.statistics.gov.uk/datasets/ons::lad-dec-2021-gb-bfc/explore?location=55.217379%2C-3.265847%2C6.44
-
 
 Lower Tier Local Authority to Upper Tier Local Authority (April 2023) Lookup in England and Wales
 https://geoportal.statistics.gov.uk/datasets/ons::lower-tier-local-authority-to-upper-tier-local-authority-april-2023-lookup-in-england-and-wales/explore
-
-
-Countries (December 2022) UK BFC
-https://geoportal.statistics.gov.uk/datasets/ons::countries-december-2022-uk-bfc/explore?location=55.215430%2C-3.316939%2C6.52
 
 
 Data Zone Boundaries 2011
@@ -34,12 +34,13 @@ Scottish Index of Multiple Deprivation 2020v2 data zones
 https://www.gov.scot/publications/scottish-index-of-multiple-deprivation-2020v2-data-zone-look-up/
 
 
-LSOA (Dec 2021) Boundaries Full Clipped EW (BFC)
-https://geoportal.statistics.gov.uk/datasets/ons::lsoa-dec-2021-boundaries-full-clipped-ew-bfc/explore?location=52.778212%2C-2.489483%2C6.94
+LSOA (Dec 2021) Boundaries (Full and generalised)
+https://geoportal.statistics.gov.uk/datasets/ons::lsoa-dec-2021-boundaries-full-clipped-ew-bfc/explore
+https://geoportal.statistics.gov.uk/datasets/ons::lsoa-dec-2021-boundaries-generalised-clipped-ew-bgc-v2/explore
 
 
-National Statistics Postcode Lookup:
-https://geoportal.statistics.gov.uk/datasets/national-statistics-postcode-lookup-2021-census-february-2023/about
+National Statistics Postcode Directory (NSPD):
+https://geoportal.statistics.gov.uk/datasets/ons-postcode-directory-may-2023/about
 
 
 My Society Names and Codes

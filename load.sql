@@ -62,32 +62,6 @@ replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(p
 from postcode_lookup_temp;
 drop table postcode_lookup_temp;
 
--- Load counties
-create table counties_temp (
-    WKT text,
-    NAME text,
-    AREA_CODE text,
-    DESCRIPTIO text,
-    FILE_NAME text,
-    NUMBER numeric,
-    NUMBER0 numeric,
-    POLYGON_ID numeric,
-    UNIT_ID numeric,
-    CODE character (9),
-    HECTARES float,
-    AREA float,
-    TYPE_CODE text,
-    DESCRIPT0 text,
-    TYPE_COD0 text,
-    DESCRIPT1 text
-);
-\copy counties_temp from 'data/county_region.csv' csv header;
-insert into county_boundary(ctycd, ctynm, geom)
-select CODE, NAME, st_geomfromtext(WKT, 27700)
-from counties_temp;
-drop table counties_temp;
-update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
-
 -- Load countries
 create table countries_temp (
     WKT text,
@@ -106,8 +80,104 @@ from countries_temp;
 drop table countries_temp;
 update country_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
--- Load LADs
-create table lads_temp (
+
+-- Load regions
+create table regions_temp (
+    WKT text,
+    objectid text,
+    rgn18cd character (9),
+    rgn18nm character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy regions_temp from 'data/region_boundaries.csv' csv header;
+insert into region_boundary(rgncd, rgnnm, geom)
+select rgn18cd, rgn18nm, st_geomfromtext(WKT, 27700)
+from regions_temp;
+drop table regions_temp;
+
+
+-- Load counties
+create table counties_temp_bfc (
+    WKT text,
+    objectid text,
+    cty23cd character (9),
+    cty23nm character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy counties_temp_bfc from 'data/county_bfc.csv' csv header;
+insert into county_boundary(ctycd, ctynm, geom)
+select cty23cd, cty23nm, st_geomfromtext(WKT, 27700)
+from counties_temp_bfc;
+drop table counties_temp_bfc;
+update county_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+-- And generalised geometry
+create table counties_temp_bgc (
+    WKT text,
+    objectid text,
+    cty23cd character (9),
+    cty23nm character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy counties_temp_bgc from 'data/county_bgc.csv' csv header;
+update county_boundary set geom_generalised = 
+    (select WKT from counties_temp_bgc where cty23cd = county_boundary.ctycd);
+drop table counties_temp_bgc;
+
+-- Load districts
+create table districts_temp_bfc (
+    WKT text,
+    objectid text,
+    lad23cd character (9),
+    lad23nm character varying(200),
+    lad23nmw character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy districts_temp_bfc from 'data/district_bfc.csv' csv header;
+insert into lad_boundary(ladcd, ladnm, geom)
+select lad23cd, lad23nm, st_geomfromtext(WKT, 27700)
+from districts_temp_bfc;
+drop table districts_temp_bfc;
+update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+create table districts_temp_bgc (
+    WKT text,
+    objectid text,
+    lad23cd character (9),
+    lad23nm character varying(200),
+    lad23nmw character varying(200),
+    bng_e float,
+    bng_n float,
+    long float,
+    lat float,
+    st_areasha numeric,
+    st_lengths numeric
+);
+\copy districts_temp_bgc from 'data/districts_bgc.csv' csv header;
+update lad_boundary set geom_generalised = 
+    (select WKT from districts_temp_bgc where lad23cd = lad_boundary.ladcd);
+drop table districts_temp_bgc;
+
+-- Load wards
+create table wards_temp (
     WKT text,
     NAME text,
     AREA_CODE text,
@@ -125,26 +195,36 @@ create table lads_temp (
     TYPE_COD0 text,
     DESCRIPT1 text
 );
-\copy lads_temp from 'data/district_borough_unitary_region.csv' csv header;
-insert into lad_boundary(ladcd, ladnm, geom)
+\copy wards_temp from 'data/district_borough_unitary_ward_region.csv' csv header;
+insert into ward_boundary(wdcd, wdnm, geom)
 select CODE, NAME, st_geomfromtext(WKT, 27700)
-from lads_temp;
-drop table lads_temp;
-update lad_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+from wards_temp where TYPE_CODE != 'VA';
+drop table wards_temp;
+
 
 -- Load LSOAs
-create table lsoas_temp (
+create table lsoas_temp_bfc (
     WKT text,
     LSOA21CD character (9),
     LSOA21NM text,
     GlobalID text
 );
-\copy lsoas_temp from 'data/lsoa_boundaries.csv' csv header;
+\copy lsoas_temp_bfc from 'data/lsoa_boundaries_bfc.csv' csv header;
 insert into lsoa_boundary(lsoacd, lsoanm, geom)
 select LSOA21CD, LSOA21NM, st_geomfromtext(WKT, 27700)
-from lsoas_temp;
-drop table lsoas_temp;
+from lsoas_temp_bfc;
+drop table lsoas_temp_bfc;
 update lsoa_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
+create table lsoas_temp_bgc (
+    WKT text,
+    LSOA21CD character (9),
+    LSOA21NM text,
+    GlobalID text
+);
+\copy lsoas_temp_bgc from 'data/lsoas_temp_bgc.csv' csv header;
+update lsoa_boundary set geom_generalised = 
+    (select WKT from lsoas_temp_bgc where LSOA21CD = lsoa_boundary.lsoacd);
+drop table lsoas_temp_bgc; 
 
 -- Load LSOA population
 \copy lsoa_population from 'data/lsoa_population.csv' csv header;
@@ -215,49 +295,6 @@ drop table ni_sa_imd_temp;
 -- Load NI SA Population
 \copy ni_sa_population from 'data/ni_population.csv' csv header;
 
--- Load regions
-create table regions_temp (
-    WKT text,
-    objectid text,
-    rgn18cd character (9),
-    rgn18nm character varying(200),
-    bng_e float,
-    bng_n float,
-    long float,
-    lat float,
-    st_areasha numeric,
-    st_lengths numeric
-);
-\copy regions_temp from 'data/region_boundaries.csv' csv header;
-insert into region_boundary(rgncd, rgnnm, geom)
-select rgn18cd, rgn18nm, st_geomfromtext(WKT, 27700)
-from regions_temp;
-drop table regions_temp;
-
--- Load wards
-create table wards_temp (
-    WKT text,
-    NAME text,
-    AREA_CODE text,
-    DESCRIPTIO text,
-    FILE_NAME text,
-    NUMBER numeric,
-    NUMBER0 numeric,
-    POLYGON_ID numeric,
-    UNIT_ID numeric,
-    CODE character (9),
-    HECTARES float,
-    AREA float,
-    TYPE_CODE text,
-    DESCRIPT0 text,
-    TYPE_COD0 text,
-    DESCRIPT1 text
-);
-\copy wards_temp from 'data/district_borough_unitary_ward_region.csv' csv header;
-insert into ward_boundary(wdcd, wdnm, geom)
-select CODE, NAME, st_geomfromtext(WKT, 27700)
-from wards_temp where TYPE_CODE != 'VA';
-drop table wards_temp;
 
 -- upper lower tier lookups
 create table lower_upper_lookup_temp (

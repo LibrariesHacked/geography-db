@@ -1,6 +1,6 @@
 data/national_statistics_postcode_lookup.csv
 data/lad_boundaries*
-data/lsoa_boundaries*
+data/lsoa_boundaries_bfc*
 data/district_borough_unitary_ward_region*
 data/os_open_uprn.csv
 data/ni_sa_boundaries.csv
