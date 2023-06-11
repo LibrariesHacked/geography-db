@@ -1,9 +1,9 @@
 create table lower_upper_lookup (
-    ltla19cd character (9),
-    utla19cd character (9),
-    constraint pk_lowerupperlookup_ltla19cd_utla19cd primary key (ltla19cd, utla19cd)
+    ltlacd character (9),
+    utlacd character (9),
+    constraint pk_lowerupperlookup_ltlacd_utlacd primary key (ltlacd, utlacd)
 );
 
-create unique index idx_lowerupperlookup_ltla19cd_utla19cd on lower_upper_lookup (ltla19cd, utla19cd);
-cluster lower_upper_lookup using idx_lowerupperlookup_ltla19cd_utla19cd;
-create index idx_lowerupperlookup_utla19cd on lower_upper_lookup (utla19cd);
+create unique index idx_lowerupperlookup_ltlacd_utlacd on lower_upper_lookup (ltlacd, utlacd);
+cluster lower_upper_lookup using idx_lowerupperlookup_ltlacd_utlacd;
+create index idx_lowerupperlookup_utlacd on lower_upper_lookup (utlacd);

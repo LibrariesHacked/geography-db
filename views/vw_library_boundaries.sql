@@ -1,6 +1,6 @@
 create view vw_library_boundaries as
 with upper_codes as (
-    select distinct utla19cd
+    select distinct utlacd
     from lower_upper_lookup
 )
 select 
@@ -10,41 +10,42 @@ select
     ad.region,
     ad.nation,
     uk.geom,
+    uk.geom_generalised,
     uk.bbox
 from 
     (select
-        lad19cd as utla19cd,
-        lad19nm as utla19nm,
-        lad19nmw as utla19nmw,
+        ladcd as utlacd,
+        ladnm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from lad_boundary
-    where lad19cd in (select utla19cd from upper_codes)
+    where ladcd in (select utlacd from upper_codes)
     union all
     select
-        cty19cd as utla19cd,
-        cty19nm as utla19nm,
-        cty19nm as utla19nmw,
+        ctycd as utlacd,
+        ctynm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from county_boundary
-    where cty19cd in (select utla19cd from upper_codes)
+    where ctycd in (select utlacd from upper_codes)
     union all
     select
-        lad19cd as utla19cd,
-        lad19nm as utla19nm,
-        lad19nmw as utla19nmw,
+        ladcd as utlacd,
+        ladnm as utlanm,
         geom,
+        geom_generalised,
         bbox
     from lad_boundary
-    where lad19cd LIKE 'S%'
+    where ladcd LIKE 'S%'
     union all
     select
-        ctry18cd as utla19cd,
-        ctry18nm as utla19nm,
-        ctry18nmw as utla19nmw,
+        ctrycd as utlacd,
+        ctrynm as utlanm,
         geom,
+        geom as geom_generalised,
         bbox
     from country_boundary
-    where ctry18nm = 'Northern Ireland') as uk
-join administrative_names ad on ad.code = uk.utla19cd;
+    where ctrynm = 'Northern Ireland') as uk
+join administrative_names ad on ad.code = uk.utlacd;

@@ -1,6 +1,7 @@
 create view vw_lsoa_boundaries as
 select
-    l.lsoa11cd,
-    l.lsoa11nm,
-    l.geom
+    l.lsoacd,
+    l.lsoanm,
+    l.geom,
+    l.geom_generalised
 from lsoa_boundary l;

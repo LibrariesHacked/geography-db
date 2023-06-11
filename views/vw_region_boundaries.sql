@@ -1,6 +1,6 @@
 create view vw_region_boundaries as
 select
-    r.rgn18cd,
-    r.rgn18nm,
+    r.rgncd,
+    r.rgnnm,
     r.geom
 from region_boundary r;

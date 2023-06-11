@@ -1,7 +1,7 @@
 create view vw_lad_boundaries as
 select
-    l.lad19cd,
-    l.lad19nm,
-    l.lad19nmw,
-    l.geom
+    l.ladcd,
+    l.ladnm,
+    l.geom,
+    l.geom_generalised
 from lad_boundary l;
