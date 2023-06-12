@@ -76,3 +76,4 @@ create index idx_postcodelookup_postcode_sector on postcode_lookup (postcode_sec
 create index idx_postcodelookup_postcode_sector_trimmed_postcode_lsoa_term on postcode_lookup (postcode_sector_trimmed, postcode, lsoa_21, terminated);
 create index idx_postcodelookup_term_postcode_sector_trimmed_lsoa_postcode on postcode_lookup (terminated, postcode_sector_trimmed, lsoa_21, postcode);
 create index idx_postcodelookup_libraryservice on postcode_lookup (library_service);
+create index idx_postcodelookup_geom on postcode_lookup using gist (geom);

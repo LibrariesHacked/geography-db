@@ -61,6 +61,7 @@ select postcode_7,postcode_8,postcode,date_of_introduction,date_of_termination,c
 replace(postcode, ' ', ''),substring(postcode, '^[a-zA-Z][a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?'),substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'),replace(substring(postcode, '^[a-zA-Z]+\d\d?[a-zA-Z]?\s*\d+'), ' ', ''),(date_of_termination is not null)
 from postcode_lookup_temp;
 drop table postcode_lookup_temp;
+update postcode_lookup set geom = st_setsrid(st_makepoint(easting, northing), 27700);
 
 -- Load countries
 create table countries_temp (

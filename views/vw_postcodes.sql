@@ -23,7 +23,8 @@ select
     p.longitude,
     p.latitude,
     p.easting,
-    p.northing
+    p.northing,
+    p.geom
 from postcode_lookup p 
 left join lsoa_boundary lb on lb.lsoacd = p.lsoa_21
 left join ward_boundary wb on wb.wdcd = p.ward
