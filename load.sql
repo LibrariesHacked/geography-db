@@ -242,6 +242,23 @@ drop table lsoas_temp_bgc;
 -- Load LSOA WIMD
 \copy lsoa_wimd from 'data/lsoa_wimd.csv' csv header;
 
+-- Load built up areas
+create table buas_temp (
+    gsscode character (9),
+    name1_text text,
+    name1_language text,
+    name2_text text,
+    name2_language text,
+    areahectares numeric,
+    geometry_area_m numeric,
+    wkt text
+);
+\copy buas_temp from 'data/os_open_built_up_areas.csv' csv header;
+insert into built_up_area_boundary(buacd, buanm, geom)
+select gsscode, name1_text, st_geomfromtext(wkt, 27700)
+from buas_temp;
+drop table buas_temp;
+
 -- Load Data zones
 create table datazones_temp (
     WKT text,
@@ -345,12 +362,6 @@ from lad_boundary lb
 where lb.ladcd = p.district
 and p.country = 'S92000003';
 
--- Pre-generate MVT 
-insert into generated_mvt_type(type)
-values 
-    ('library_authority_boundaries'),
-    ('lsoa_boundaries');
-
 -- Local authorities
 create table staging_local_authority (
   "local-authority-code" text,
@@ -404,5 +415,13 @@ select
 
 drop table staging_local_authority;
 
+-- Pre-generate MVT 
+insert into generated_mvt_type(type)
+values 
+    ('library_authority_boundaries'),
+    ('lsoa_boundaries'),
+    ('built_up_areas');
+
 select fn_generate_mvt('fn_library_authorities_mvt', 0, 8);
 select fn_generate_mvt('fn_lsoas_mvt', 0, 8);
+select fn_generate_mvt('fn_built_up_areas_mvt', 0, 8);

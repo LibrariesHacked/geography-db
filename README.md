@@ -45,3 +45,7 @@ https://geoportal.statistics.gov.uk/datasets/ons-postcode-directory-may-2023/abo
 
 My Society Names and Codes
 https://github.com/mysociety/uk_local_authority_names_and_codes/blob/main/data/uk_local_authorities.csv
+
+
+OS Open Built up areas
+https://www.ordnancesurvey.co.uk/products/os-open-built-up-areas#get

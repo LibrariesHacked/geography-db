@@ -11,6 +11,7 @@
 set client_encoding = 'UTF8';
 
 -- create tables
+\i 'tables/tbl_built_up_areas_boundary.sql';
 \i 'tables/tbl_county_boundary.sql';
 \i 'tables/tbl_country_boundary.sql';
 \i 'tables/tbl_lad_boundary.sql';
@@ -32,6 +33,7 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_generated_mvt.sql';
 
 -- create views
+\i 'views/vw_built_up_area_boundaries.sql';
 \i 'views/vw_county_boundaries.sql';
 \i 'views/vw_country_boundaries.sql';
 \i 'views/vw_lad_boundaries.sql';
@@ -46,6 +48,7 @@ set client_encoding = 'UTF8';
 
 -- create functions
 \i 'functions/fn_bbox.sql';
+\i 'functions/fn_built_up_areas_mvt.sql';
 \i 'functions/fn_counties_mvt.sql';
 \i 'functions/fn_countries_mvt.sql';
 \i 'functions/fn_lads_mvt.sql';
