@@ -11,7 +11,7 @@
 set client_encoding = 'UTF8';
 
 -- create tables
-\i 'tables/tbl_built_up_areas_boundary.sql';
+\i 'tables/tbl_built_up_area_boundary.sql';
 \i 'tables/tbl_county_boundary.sql';
 \i 'tables/tbl_country_boundary.sql';
 \i 'tables/tbl_lad_boundary.sql';
