@@ -291,7 +291,7 @@ create table oa11_to_oa21_staging (
     LAD22NM text,
     LAD22NMW text
 );
-\copy oa11_to_oa21_staging from 'data/oa1_oa21.csv' csv header;
+\copy oa11_to_oa21_staging from 'data/oa11_oa21.csv' csv header;
 insert into oa11_oa21(oa11, oa21)
 select OA11CD, OA21CD
 from oa11_to_oa21_staging;
