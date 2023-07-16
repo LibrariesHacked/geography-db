@@ -31,6 +31,10 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_lower_upper_lookup.sql';
 \i 'tables/tbl_generated_mvt_type.sql';
 \i 'tables/tbl_generated_mvt.sql';
+\i 'tables/tbl_oa_bua.sql';
+\i 'tables/tbl_oa_population.sql';
+\i 'tables/tbl_oa11_oa21.sql';
+\i 'tables/tbl_oa11_lsoa11.sql';
 
 -- create views
 \i 'views/vw_built_up_area_boundaries.sql';

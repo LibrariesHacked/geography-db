@@ -259,6 +259,79 @@ select gsscode, name1_text, st_geomfromtext(wkt, 27700)
 from buas_temp;
 drop table buas_temp;
 
+
+-- load oa to bua lookup table
+create table oa_bua_staging (
+    OA21CD text,
+    BUA22CD text,
+    BUA22NM text,
+    BUA22NMW text,
+    LAD22CD text,
+    LAD22NM text,
+    LAD22NMW text,
+    RGN22CD text,
+    RGN22NM text,
+    RGN22NMW text,
+    ObjectId text
+);
+\copy oa_bua_staging from 'data/oa21_bua.csv' csv header;
+insert into oa_bua(oa, bua)
+select OA21CD, BUA22CD
+from oa_bua_staging;
+drop table oa_bua_staging;
+
+
+-- load oa11 to oa21 lookup table
+create table oa11_to_oa21_staging (
+    ObjectId text,
+    OA11CD text,
+    OA21CD text,
+    CHNGIND text,
+    LAD22CD text,
+    LAD22NM text,
+    LAD22NMW text
+);
+\copy oa11_to_oa21_staging from 'data/oa1_oa21.csv' csv header;
+insert into oa11_oa21(oa11, oa21)
+select OA11CD, OA21CD
+from oa11_to_oa21_staging;
+drop table oa11_to_oa21_staging;
+
+
+-- load oa population data
+create table oa_population_staging (
+    date text,
+    geography text,
+    geography_code text,
+    all_persons numeric,
+    female numeric,
+    male numeric
+);
+\copy oa_population_staging from 'data/oa21_population.csv' csv header quote '"';
+insert into oa_population(oa, population)
+select geography_code, all_persons
+from oa_population_staging;
+drop table oa_population_staging;
+
+
+-- load oa11 to lsoa11 lookup table
+create table oa11_to_lsoa11_staging (
+    OA11CD text,
+    LSOA11CD text,
+    LSOA11NM text,
+    MSOA11CD text,
+    MSOA11NM text,
+    LAD11CD text,
+    LAD11NM text,
+    LAD11NMW text,
+    ObjectId text
+);
+\copy oa11_to_lsoa11_staging from 'data/oa11_lsoa11.csv' csv header;
+insert into oa11_lsoa11(oa11, lsoa11)
+select OA11CD, LSOA11CD
+from oa11_to_lsoa11_staging;
+drop table oa11_to_lsoa11_staging;
+
 -- Load Data zones
 create table datazones_temp (
     WKT text,
