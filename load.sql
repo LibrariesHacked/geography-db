@@ -258,6 +258,7 @@ insert into built_up_area_boundary(buacd, buanm, geom)
 select gsscode, name1_text, st_geomfromtext(wkt, 27700)
 from buas_temp;
 drop table buas_temp;
+update built_up_area_boundary set bbox = st_snaptogrid(st_envelope(st_transform(geom, 3857)), 1);
 
 
 -- load oa to bua lookup table

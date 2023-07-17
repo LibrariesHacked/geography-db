@@ -14,10 +14,10 @@ end if;
 
 select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
 from (
-  select code, name, min_imd_decile, population, classification, st_asmvtgeom(st_transform(geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
-  from vw_built_up_area_boundaries
-  where geom && st_transform(tile_bbox, 27700)
-) as s;
+  select bua.code, bua.name, bua.min_imd_decile, bua.population, bua.classification, st_asmvtgeom(st_transform(bua.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
+  from vw_built_up_area_boundaries bua
+  where bua.bbox && tile_bbox
+) as bua;
 
 insert into generated_mvt(layer_id, x, y, z, tile) values(layer_type, tile_x, tile_y, zoom, tile);
 
