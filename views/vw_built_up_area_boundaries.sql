@@ -2,7 +2,6 @@ create or replace view vw_built_up_area_boundaries as
 select 
     bua.buacd as code,
     bua.buanm as name,
-    bua.geom as geom,
     min(oa21_imd.imd_decile) as min_imd_decile,
     sum(pop.population) as population,
     case
@@ -13,7 +12,9 @@ select
         when sum(pop.population) >= 60000 and sum(pop.population) < 175000 then 'Large Towns'
         when sum(pop.population) >= 175000 then 'Cities'
         else null 
-    end as classification
+    end as classification,
+    bua.geom as geom,
+    bua.bbox as bbox
 from built_up_area_boundary bua
 left join oa_bua oa
 on oa.bua = bua.buacd
@@ -31,4 +32,4 @@ left join (
     order by oa21
 ) oa21_imd
 on oa21_imd.oa21 = oa.oa
-group by bua.buacd, bua.buanm, bua.geom;
+group by bua.buacd, bua.buanm, bua.geom, bua.bbox;

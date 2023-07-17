@@ -12,7 +12,7 @@ if found then
   return tile;
 end if;
 
-select st_asmvt(s, layer_name, 4096, 'mvt_geom') into tile
+select st_asmvt(bua, layer_name, 4096, 'mvt_geom') into tile
 from (
   select bua.code, bua.name, bua.min_imd_decile, bua.population, bua.classification, st_asmvtgeom(st_transform(bua.geom, 3857), tile_bbox, 4096, 256, true) as mvt_geom
   from vw_built_up_area_boundaries bua
