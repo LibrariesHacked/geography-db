@@ -17,21 +17,26 @@ create table place_name (
   bbox_ymax,
   postcode_district,
   populated_place,
-  populated_place_type,
-  district,
-  district_type,
-  county_unitary,
-  county_unitary_type,
-  region,
-  country,
+  district_id,
+  county_unitary_id,
+  region_id,
+  country_id,
   same_as_dbpedia,
   same_as_geonames
 );
 
 select AddGeometryColumn ('public', 'place_name', 'geom', 27700, 'POINT', 2);
+create index idx_place_name_geom on place_name using gist (geom);
 
-
-
+create index idx_place_name_name1 on place_name (name1);
+create index idx_place_name_name1_trgm on place_name using gin (name1 gin_trgm_ops);
+create index idx_place_name_name2 on place_name (name2);
+create index idx_place_name_name2_trgm on place_name using gin (name2 gin_trgm_ops);
+create index idx_place_name_postcode_district on place_name (postcode_district);
+create index idx_place_name_district_id on place_name (district_id);
+create index idx_place_name_county_unitary_id on place_name (county_unitary_id);
+create index idx_place_name_region_id on place_name (region_id);
+create index idx_place_name_country_id on place_name (country_id);
 
 
 ID,NAMES_URI,NAME1,NAME1_LANG,NAME2,NAME2_LANG,TYPE,LOCAL_TYPE,
