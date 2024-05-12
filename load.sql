@@ -492,21 +492,22 @@ drop table staging_local_authority;
 
 -- create staging table for open names
 create table staging_place_names (
-  NAMES_URI text,
-  NAME1 text,
+  ID text,--osgb4000000074541653
+  NAMES_URI text,--http://data.ordnancesurvey.co.uk/id/4000000074541653
+  NAME1 text,--Westing
   NAME1_LANG text,
   NAME2 text,
   NAME2_LANG text,
-  TYPE text,
-  LOCAL_TYPE text,
-  GEOMETRY_X text,
-  GEOMETRY_Y text,
-  MOST_DETAIL_VIEW_RES text,
-  LEAST_DETAIL_VIEW_RES text,
-  MBR_XMIN text,
-  MBR_YMIN text,
-  MBR_XMAX text,
-  MBR_YMAX text,
+  "TYPE" text,--populatedPlace
+  LOCAL_TYPE text,--Other Settlement
+  GEOMETRY_X integer,--457077
+  GEOMETRY_Y integer,--1205289
+  MOST_DETAIL_VIEW_RES integer,--15000
+  LEAST_DETAIL_VIEW_RES integer,--25000
+  MBR_XMIN integer,
+  MBR_YMIN integer,
+  MBR_XMAX integer,
+  MBR_YMAX integer,
   POSTCODE_DISTRICT text,
   POSTCODE_DISTRICT_URI text,
   POPULATED_PLACE text,
@@ -538,7 +539,7 @@ select
   NAME1_LANG,
   NAME2,
   NAME2_LANG,
-  TYPE,
+  "TYPE",
   LOCAL_TYPE,
   GEOMETRY_X,
   GEOMETRY_Y,
