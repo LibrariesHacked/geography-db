@@ -491,40 +491,77 @@ drop table staging_local_authority;
 
 
 -- create staging table for open names
-create table staging_open_names (
-    ID  text,
-    NAMES_URI,NAME1,NAME1_LANG,NAME2,NAME2_LANG,TYPE,LOCAL_TYPE,
+create table staging_place_names (
+  NAMES_URI text,
+  NAME1 text,
+  NAME1_LANG text,
+  NAME2 text,
+  NAME2_LANG text,
+  TYPE text,
+  LOCAL_TYPE text,
+  GEOMETRY_X text,
+  GEOMETRY_Y text,
+  MOST_DETAIL_VIEW_RES text,
+  LEAST_DETAIL_VIEW_RES text,
+  MBR_XMIN text,
+  MBR_YMIN text,
+  MBR_XMAX text,
+  MBR_YMAX text,
+  POSTCODE_DISTRICT text,
+  POSTCODE_DISTRICT_URI text,
+  POPULATED_PLACE text,
+  POPULATED_PLACE_URI text,
+  POPULATED_PLACE_TYPE text,
+  DISTRICT_BOROUGH text,
+  DISTRICT_BOROUGH_URI text,
+  DISTRICT_BOROUGH_TYPE text,
+  COUNTY_UNITARY text,
+  COUNTY_UNITARY_URI text,
+  COUNTY_UNITARY_TYPE text,
+  REGION text,
+  REGION_URI text,
+  COUNTRY text,
+  COUNTRY_URI text,
+  RELATED_SPATIAL_OBJECT text,
+  SAME_AS_DBPEDIA text,
+  SAME_AS_GEONAMES text
+);
+
+-- load open names csv
+\copy staging_place_names from 'data/os_open_names.csv' csv header;
+
+-- insert into place_name table
+insert into place_name (uri, name1, name1_lang, name2, name2_lang, inspire_type, local_type, easting, northing, most_detail_view_resolution, least_detail_view_resolution, bbox_xmin, bbox_ymin, bbox_xmax, bbox_ymax, postcode_district, populated_place, district_code, county_unitary_code, region_code, country_code, same_as_dbpedia, same_as_geonames, geom)
+select
+  NAMES_URI,
+  NAME1,
+  NAME1_LANG,
+  NAME2,
+  NAME2_LANG,
+  TYPE,
+  LOCAL_TYPE,
   GEOMETRY_X,
   GEOMETRY_Y,
   MOST_DETAIL_VIEW_RES,
-  LEAST_DETAIL_VIEW_RES	MBR_XMIN,
+  LEAST_DETAIL_VIEW_RES,
+  MBR_XMIN,
   MBR_YMIN,
   MBR_XMAX,
   MBR_YMAX,
   POSTCODE_DISTRICT,
-  POSTCODE_DISTRICT_URI,
   POPULATED_PLACE,
-  POPULATED_PLACE_URI,
-  POPULATED_PLACE_TYPE,
-  DISTRICT_BOROUGH,
-  DISTRICT_BOROUGH_URI,
-  DISTRICT_BOROUGH_TYPE,
-  COUNTY_UNITARY,
-  COUNTY_UNITARY_URI,
-  COUNTY_UNITARY_TYPE,
-  REGION,
-  REGION_URI,
-  COUNTRY,
-  COUNTRY_URI,
-  RELATED_SPATIAL_OBJECT,
+  l.ladcd,
+  cty.ctycd,
+  r.rgncd,
+  c.ctrycd,
   SAME_AS_DBPEDIA,
-  SAME_AS_GEONAMES
-)
-
-
-
--- load open names csv
-
+  SAME_AS_GEONAMES,
+  st_setsrid(st_makepoint(GEOMETRY_X::numeric, GEOMETRY_Y::numeric), 27700)
+from staging_place_names sp
+join lad_boundary l on l.ladnm = sp.DISTRICT_BOROUGH
+join county_boundary cty on cty.ctynm = sp.COUNTY_UNITARY
+join region_boundary r on r.rgnnm = sp.REGION
+join country_boundary c on c.ctrynm = sp.COUNTRY;
 
 -- Pre-generate MVT 
 insert into generated_mvt_type(type)
