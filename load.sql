@@ -559,10 +559,10 @@ select
   SAME_AS_GEONAMES,
   st_setsrid(st_makepoint(GEOMETRY_X::numeric, GEOMETRY_Y::numeric), 27700)
 from staging_place_names sp
-join lad_boundary l on l.ladnm = sp.DISTRICT_BOROUGH
-join county_boundary cty on cty.ctynm = sp.COUNTY_UNITARY
-join region_boundary r on r.rgnnm = sp.REGION
-join country_boundary c on c.ctrynm = sp.COUNTRY;
+left join lad_boundary l on l.ladnm = sp.DISTRICT_BOROUGH
+left join county_boundary cty on cty.ctynm = sp.COUNTY_UNITARY
+left join region_boundary r on r.rgnnm = sp.REGION
+left join country_boundary c on c.ctrynm = sp.COUNTRY;
 
 -- Pre-generate MVT 
 insert into generated_mvt_type(type)

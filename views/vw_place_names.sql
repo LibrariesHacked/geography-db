@@ -26,7 +26,7 @@ select
     p.same_as_geonames,
     p.geom
 from place_name p
-join lad_boundary d on p.district_code = d.ladcd
-join county_boundary c on p.county_unitary_code = c.ctycd
-join region_boundary r on p.region_code = r.rgncd
-join country_boundary co on p.country_code = co.ctrycd;
+left join lad_boundary d on p.district_code = d.ladcd
+left join county_boundary c on p.county_unitary_code = c.ctycd
+left join region_boundary r on p.region_code = r.rgncd
+left join country_boundary co on p.country_code = co.ctrycd;
