@@ -18,7 +18,7 @@ select
     p.bbox_ymax,
     p.postcode_district,
     p.populated_place,
-    d.ladnm as district_name,
+    d.ladnm as district,
     c.ctynm as county,
     r.rgnnm as region,
     co.ctrynm as country,
