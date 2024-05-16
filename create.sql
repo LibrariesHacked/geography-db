@@ -35,6 +35,7 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_oa_population.sql';
 \i 'tables/tbl_oa11_oa21.sql';
 \i 'tables/tbl_oa11_lsoa11.sql';
+\i 'tables/tbl_place_name.sql';
 
 -- create views
 \i 'views/vw_built_up_area_boundaries.sql';
@@ -49,6 +50,7 @@ set client_encoding = 'UTF8';
 \i 'views/vw_postcodes.sql';
 \i 'views/vw_smallareas_uk.sql';
 \i 'views/vw_postcode_smallarea_uk.sql';
+\i 'views/vw_place_names.sql';
 
 -- create functions
 \i 'functions/fn_bbox.sql';

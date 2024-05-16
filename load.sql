@@ -489,6 +489,81 @@ select
 
 drop table staging_local_authority;
 
+
+-- create staging table for open names
+create table staging_place_names (
+  ID text,--osgb4000000074541653
+  NAMES_URI text,--http://data.ordnancesurvey.co.uk/id/4000000074541653
+  NAME1 text,--Westing
+  NAME1_LANG text,
+  NAME2 text,
+  NAME2_LANG text,
+  "TYPE" text,--populatedPlace
+  LOCAL_TYPE text,--Other Settlement
+  GEOMETRY_X integer,--457077
+  GEOMETRY_Y integer,--1205289
+  MOST_DETAIL_VIEW_RES integer,--15000
+  LEAST_DETAIL_VIEW_RES integer,--25000
+  MBR_XMIN integer,
+  MBR_YMIN integer,
+  MBR_XMAX integer,
+  MBR_YMAX integer,
+  POSTCODE_DISTRICT text,
+  POSTCODE_DISTRICT_URI text,
+  POPULATED_PLACE text,
+  POPULATED_PLACE_URI text,
+  POPULATED_PLACE_TYPE text,
+  DISTRICT_BOROUGH text,
+  DISTRICT_BOROUGH_URI text,
+  DISTRICT_BOROUGH_TYPE text,
+  COUNTY_UNITARY text,
+  COUNTY_UNITARY_URI text,
+  COUNTY_UNITARY_TYPE text,
+  REGION text,
+  REGION_URI text,
+  COUNTRY text,
+  COUNTRY_URI text,
+  RELATED_SPATIAL_OBJECT text,
+  SAME_AS_DBPEDIA text,
+  SAME_AS_GEONAMES text
+);
+
+-- load open names csv
+\copy staging_place_names from 'data/os_open_names.csv' csv header;
+
+-- insert into place_name table
+insert into place_name (uri, name1, name1_lang, name2, name2_lang, inspire_type, local_type, easting, northing, most_detail_view_resolution, least_detail_view_resolution, bbox_xmin, bbox_ymin, bbox_xmax, bbox_ymax, postcode_district, populated_place, district_code, county_unitary_code, region_code, country_code, same_as_dbpedia, same_as_geonames, geom)
+select
+  NAMES_URI,
+  NAME1,
+  NAME1_LANG,
+  NAME2,
+  NAME2_LANG,
+  "TYPE",
+  LOCAL_TYPE,
+  GEOMETRY_X,
+  GEOMETRY_Y,
+  MOST_DETAIL_VIEW_RES,
+  LEAST_DETAIL_VIEW_RES,
+  MBR_XMIN,
+  MBR_YMIN,
+  MBR_XMAX,
+  MBR_YMAX,
+  POSTCODE_DISTRICT,
+  POPULATED_PLACE,
+  l.ladcd,
+  cty.ctycd,
+  r.rgncd,
+  c.ctrycd,
+  SAME_AS_DBPEDIA,
+  SAME_AS_GEONAMES,
+  st_setsrid(st_makepoint(GEOMETRY_X::numeric, GEOMETRY_Y::numeric), 27700)
+from staging_place_names sp
+left join lad_boundary l on l.ladnm = sp.DISTRICT_BOROUGH
+left join county_boundary cty on cty.ctynm = sp.COUNTY_UNITARY
+left join region_boundary r on r.rgnnm = sp.REGION
+left join country_boundary c on c.ctrynm = sp.COUNTRY;
+
 -- Pre-generate MVT 
 insert into generated_mvt_type(type)
 values 

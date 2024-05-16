@@ -11,5 +11,10 @@ ogr2ogr -f "CSV" county_bgc.csv county_bgc.shp -lco GEOMETRY=AS_WKT -nlt PROMOTE
 ogr2ogr -f "CSV" district_bfc.csv district_bfc.shp -lco GEOMETRY=AS_WKT -nlt PROMOTE_TO_MULTI
 ogr2ogr -f "CSV" district_bgc.csv district_bgc.shp -lco GEOMETRY=AS_WKT -nlt PROMOTE_TO_MULTI
 
+cd os_open_names
+copy *.csv os_open_names.csv \b
+move os_open_names.csv ..
+cd ..
+
 cd ..
 psql --set=sslmode=require -f create.sql -h localhost -p 5432 -U postgres postgres
