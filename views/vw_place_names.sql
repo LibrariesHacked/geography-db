@@ -10,6 +10,8 @@ select
     p.local_type,
     p.easting,
     p.northing,
+    st_x(st_transform(p.geom, 4326)) as longitude,
+    st_y(st_transform(p.geom, 4326)) as latitude,
     p.most_detail_view_resolution,
     p.least_detail_view_resolution,
     p.bbox_xmin,
@@ -24,7 +26,8 @@ select
     co.ctrynm as country,
     p.same_as_dbpedia,
     p.same_as_geonames,
-    p.geom
+    st_asgeojson(st_transform(p.geom, 4326))::json as geojson,
+    st_asgeojson(st_transform(st_makeenvelope(p.bbox_xmin, p.bbox_ymin, p.bbox_xmax, p.bbox_ymax, 27700), 4326))::json as bbox_geojson
 from place_name p
 left join lad_boundary d on p.district_code = d.ladcd
 left join county_boundary c on p.county_unitary_code = c.ctycd
