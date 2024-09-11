@@ -20,6 +20,7 @@ set client_encoding = 'UTF8';
 \i 'tables/tbl_lsoa_imd.sql';
 \i 'tables/tbl_lsoa_wimd.sql';
 \i 'tables/tbl_lsoa_upper_lookup.sql';
+\i 'tables/tbl_lsoa_rural_urban.sql';
 \i 'tables/tbl_lsoa11_lsoa21.sql';
 \i 'tables/tbl_datazone_boundary.sql';
 \i 'tables/tbl_datazone_imd_population.sql';

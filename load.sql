@@ -247,6 +247,20 @@ drop table lsoas_temp_bgc;
 -- Load LSOA WIMD
 \copy lsoa_wimd from 'data/lsoa_wimd.csv' csv header;
 
+-- Load LSOA Rural Urban Lookup
+create table lsoa_rural_urban_temp (
+    FID text,
+    LSOA11CD text,
+    LSOA11NM text,
+    RUC11CD text,
+    RUC11 text
+);
+\copy lsoa_rural_urban_temp from 'data/lsoa11_rural_urban_classification.csv' csv header;
+insert into lsoa_rural_urban(lsoacd, rucd)
+select LSOA11CD, RUC11CD
+from lsoa_rural_urban_temp;
+drop table lsoa_rural_urban_temp;
+
 -- Load LSOA to UTLA Lookup
 create table lsoa_to_upper_lookup_temp (
     LSOA21CD text,
