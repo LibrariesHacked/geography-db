@@ -1,5 +1,5 @@
 -- Load postcodes
--- pcd,pcd2,pcds,dointr,doterm,usertype,oseast1m,osnrth1m,osgrdind,oa21,cty,ced,laua,ward,nhser,ctry,rgn,pcon,ttwa,itl,park,lsoa21,msoa21,wz11,sicbl,bua22,ru11ind,oac11,lat,long,lep1,lep2,pfa,imd,icb
+-- pcd,pcd2,pcds,dointr,doterm,oscty,ced,oslaua,osward,parish,usertype,oseast1m,osnrth1m,osgrdind,oshlthau,nhser,ctry,rgn,streg,pcon,eer,teclec,ttwa,pct,itl,statsward,oa01,casward,npark,lsoa01,msoa01,ur01ind,oac01,oa11,lsoa11,msoa11,wz11,sicbl,bua11,buasd11,ru11ind,oac11,lat,long,lep1,lep2,pfa,imd,calncv,icb,oa21,lsoa21,msoa21
 create table postcode_lookup_temp (
     postcode_7 character varying (7),
     postcode_8 character varying (8),
@@ -214,6 +214,11 @@ create table lsoas_temp_bfc (
     WKT text,
     LSOA21CD character (9),
     LSOA21NM text,
+    LSOA21NMW text,
+    BNG_E text,
+    BNG_N text,
+    LAT text,
+    LONG text,
     GlobalID text
 );
 \copy lsoas_temp_bfc from 'data/lsoa_boundaries_bfc.csv' csv header;
@@ -241,6 +246,53 @@ drop table lsoas_temp_bgc;
 
 -- Load LSOA WIMD
 \copy lsoa_wimd from 'data/lsoa_wimd.csv' csv header;
+
+-- Load LSOA Rural Urban Lookup
+create table lsoa_rural_urban_temp (
+    FID text,
+    LSOA11CD text,
+    LSOA11NM text,
+    RUC11CD text,
+    RUC11 text
+);
+\copy lsoa_rural_urban_temp from 'data/lsoa11_rural_urban_classification.csv' csv header;
+insert into lsoa_rural_urban(lsoacd, rucd)
+select LSOA11CD, RUC11CD
+from lsoa_rural_urban_temp;
+drop table lsoa_rural_urban_temp;
+
+-- Load LSOA to UTLA Lookup
+create table lsoa_to_upper_lookup_temp (
+    LSOA21CD text,
+    LSOA21NM text,
+    LSOA21NMW text,
+    UTLA23CD text,
+    UTLA23NM text,
+    UTLA23NMW text,
+    ObjectId text
+);
+\copy lsoa_to_upper_lookup_temp from 'data/lsoa21_to_utla23.csv' csv header;
+insert into lsoa_upper_lookup(lsoacd, utlacd)
+select LSOA21CD, UTLA23CD
+from lsoa_to_upper_lookup_temp;
+drop table lsoa_to_upper_lookup_temp;
+
+-- Load LSOA11 to LSOA21 Lookup
+create table lsoa11_to_lsoa21_temp (
+    ObjectId text,
+    LSOA11CD text,
+    LSOA11NM text,
+    LSOA21CD text,
+    LSOA21NM text,
+    LAD22CD text,
+    LAD22NM text,
+    LAD22NMW text
+);
+\copy lsoa11_to_lsoa21_temp from 'data/lsoa11_to_lsoa21_to_lad.csv' csv header;
+insert into lsoa11_lsoa21(lsoa11, lsoa21)
+select distinct LSOA11CD, LSOA21CD
+from lsoa11_to_lsoa21_temp;
+drop table lsoa11_to_lsoa21_temp;
 
 -- Load built up areas
 create table buas_temp (
@@ -485,7 +537,8 @@ select
   "official-name",
   "nice-name",
   "nation",
-  "region" from staging_local_authority where "gss-code" is not null;
+  "region"
+from staging_local_authority where "gss-code" is not null;
 
 drop table staging_local_authority;
 
