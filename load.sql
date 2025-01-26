@@ -294,6 +294,24 @@ select distinct LSOA11CD, LSOA21CD
 from lsoa11_to_lsoa21_temp;
 drop table lsoa11_to_lsoa21_temp;
 
+-- Load LSOA11 to LSOA21 Lookup
+create table lsoa11_to_lsoa21_exact_temp (
+    LSOA11CD text,
+    LSOA11NM text,
+    LSOA21CD text,
+    LSOA21NM text,
+    CHGIND text,
+    LAD22CD text,
+    LAD22NM text,
+    LAD22NMW text,
+    ObjectId text
+);
+\copy lsoa11_to_lsoa21_exact_temp from 'data/lsoa11_to_lsoa21_exact.csv' csv header;
+insert into lsoa11_lsoa21_exact(lsoa11, lsoa21, changeindicator)
+select distinct LSOA11CD, LSOA21CD,CHGIND
+from lsoa11_to_lsoa21_exact_temp;
+drop table lsoa11_to_lsoa21_exact_temp;
+
 -- Load built up areas
 create table buas_temp (
     gsscode character (9),
