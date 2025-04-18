@@ -1,4 +1,4 @@
-create view vw_library_boundaries as
+create or replace view vw_library_boundaries as
 with upper_codes as (
     select distinct utlacd
     from lower_upper_lookup
@@ -38,14 +38,17 @@ from
         geom_generalised,
         bbox
     from lad_boundary
-    where ladcd LIKE 'S%'
-    union all
-    select
-        ctrycd as utlacd,
-        ctrynm as utlanm,
-        geom,
-        geom as geom_generalised,
-        bbox
-    from country_boundary
-    where ctrynm = 'Northern Ireland') as uk
-join administrative_names ad on ad.code = uk.utlacd;
+    where ladcd LIKE 'S%') as uk
+join administrative_names ad on ad.code = uk.utlacd
+union all
+select
+    ctrycd as code,
+    cast(ctrynm as character varying(100)) as name,
+    cast('LibrariesNI' as character varying(100)) as nice_name,
+    cast('Northern Ireland' as character varying(100)) as region,
+    cast('Northern Ireland' as character varying(100)) as nation,
+    geom,
+    geom as geom_generalised,
+    bbox
+from country_boundary
+where ctrynm = 'Northern Ireland';
